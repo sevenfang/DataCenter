@@ -1,0 +1,9 @@
+server:
+  port: 8189
+logging:
+  level:
+    root: debug
+spring:
+  thymeleaf:
+    static-path-pattern: /**
+    cache: false
