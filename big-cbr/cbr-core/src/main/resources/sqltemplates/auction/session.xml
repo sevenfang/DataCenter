@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取所有产次 排除已经过滤的场次-->
+    <!--没有使用redis 暂时用数据库-->
+    <sql id="getAllSessions">
+        <![CDATA[
+           select id, name from realreport.aucs_ams_screen
+           where 1 = 1
+           <#if params.start>
+           and endTime> #{params.start}
+           </#if>
+           <#if params.end>
+           and endTime< #{params.start}
+           </#if>
+           and name not like '%临时场%'
+           <#if (params.excludeSessions?size>0)>
+                and name not in (#{params.excludeSessions})
+           </#if>
+           and name not in ( SELECT name FROM realreport.`t_session` )
+           GROUP BY name
+        ]]>
+    </sql>
+
+    <!--查询场次ID 供报表查询使用-->
+    <sql id="getAllSessionIds">
+        <![CDATA[
+           select id from realreport.aucs_ams_screen
+           where 1 = 1
+           and status<>500
+           and auctionType=1
+           <#if params.start>
+                and startTime> #{params.start}
+           </#if>
+           <#if params.end>
+                and startTime< #{params.end}
+           </#if>
+           <#if params.overStart>
+                and endTime> #{params.overStart}
+           </#if>
+           <#if params.overEnd>
+                and endTime< #{params.overEnd}
+           </#if>
+           and name not like '%临时场%'
+           <#if params.sessionNames?exists && (params.sessionNames?size>0)>
+                and name in (#{params.sessionNames})
+           </#if>
+                and name not in ( SELECT name FROM realreport.`t_session` )
+        ]]>
+    </sql>
+
+    <!--获取所有过滤的场次-->
+    <sql id="getAllExcludeSessions">
+        <![CDATA[
+        SELECT name FROM realreport.`t_session`;
+
+        ]]>
+    </sql>
+
+    <sql id="getSessionByName">
+        <![CDATA[
+        SELECT name FROM realreport.`t_session` where name=#{params.name};
+        ]]>
+    </sql>
+
+
+    <!--添加过滤的场次-->
+    <sql id="addExcludeSession">
+        <![CDATA[
+            INSERT INTO realreport.t_session ( name ) VALUES ( #{params.name} )
+        ]]>
+    </sql>
+    <!--添加过滤的场次-->
+    <sql id="delExcludeSession">
+        <![CDATA[
+            DELETE FROM realreport.t_session where name =  #{params.name}
+        ]]>
+    </sql>
+</sqlMap>

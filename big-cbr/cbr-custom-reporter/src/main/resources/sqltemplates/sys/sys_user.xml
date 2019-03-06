@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="get_user_info">
+        <![CDATA[
+        SELECT * FROM realreport.basic_sys_user WHERE 1 = 1
+        <#if (params.id)??>
+        and id = #{params.id};
+        </#if>
+         ]]>
+    </sql>
+</sqlMap>

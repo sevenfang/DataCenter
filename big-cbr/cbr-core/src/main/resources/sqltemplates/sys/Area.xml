@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="transCityIdToName">
+        <![CDATA[
+            SELECT name FROM realreport.basic_sys_dic where id in  (#{params.cityIds})
+         ]]>
+    </sql>
+</sqlMap>

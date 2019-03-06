@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap namespace="market">
+
+    <!-- 脚本说明 -->
+    <!-- 查询整个销售部实时的总计 -->
+    <sql id="queryWholeReport">
+        <![CDATA[
+    	SELECT
+    		0 as id,
+    		DATE_FORMAT(t.queryTime,'%Y-%m-%d %H:%i:%s') as item,
+			IFNULL(SUM(t.totalCount),0) totalCount,
+			IFNULL(SUM(t.vaildCount),0) vaildCount,
+			IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+		FROM
+			new_real_report_market_region t WHERE t.queryTime  = #{params.queryTime}
+    	]]>
+    </sql>
+
+    <sql id="queryBigChannelSortsReport">
+        <![CDATA[
+            select id,item,totalCount,vaildCount,appointDetectionCount from(
+			select a.id,a.name as item,
+			    IFNULL(SUM(b.totalCount),0) totalCount,
+			    IFNULL(SUM(b.vaildCount),0) vaildCount,
+			    IFNULL(SUM(b.appointDetectionCount),0) appointDetectionCount
+                from `realreport`.`basic_source_kind` a
+                left join `realreport`.`new_real_report_market_region` b
+                on a.id = b.parentId and b.queryTime  = #{params.queryTime}
+                <#if childChannel?exists>
+                    and channelId = #{params.childChannel}
+                </#if>
+                where a.supId=2 and a.flag=1
+                GROUP BY a.id
+
+                union
+
+                SELECT
+                -2 as id,
+                '未指定分类' as item,
+                IFNULL(SUM(t.totalCount),0) totalCount,
+                IFNULL(SUM(t.vaildCount),0) vaildCount,
+                IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+                FROM
+                    new_real_report_market_region t WHERE t.queryTime  = #{params.queryTime}
+                    <#if childChannel?exists>
+                        and channelId = #{params.childChannel}
+                    </#if>
+                    and parentId = -2) as result
+                <#if channel?exists>
+                    where id = #{params.channel}
+                </#if>
+
+    	]]>
+    </sql>
+
+    <sql id="queryChildChannelSortsReport">
+        <![CDATA[
+			select a.id,a.name as item,
+                IFNULL(SUM(b.totalCount),0) totalCount,
+			    IFNULL(SUM(b.vaildCount),0) vaildCount,
+			    IFNULL(SUM(b.appointDetectionCount),0) appointDetectionCount
+                from `realreport`.`basic_source_kind` a
+                left join `realreport`.`new_real_report_market_region` b
+                on a.id = b.parentId and b.queryTime  = #{params.queryTime}
+                 where a.supId = #{params.id}  and a.flag=1
+                <#if childChannel?exists>
+				    and b.channelId=#{params.childChannel}
+			    </#if>
+                GROUP BY a.id
+        ]]>
+    </sql>
+
+    <!-- 查询销售部下面各个片区的总计 -->
+    <sql id="queryRegionReport">
+        <![CDATA[
+    		SELECT
+				CONCAT(parentId,'_',cityId) id,
+				cityName item,
+				IFNULL(SUM(t.totalCount),0) totalCount,
+                IFNULL(SUM(t.vaildCount),0) vaildCount,
+                IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+			FROM
+				new_real_report_market_region t
+			 WHERE t.queryTime  = #{params.queryTime}
+			 and parentId = #{params.id}
+			 <#if childChannel?exists>
+                and t.channelId=#{params.childChannel}
+             </#if>
+			GROUP BY cityId
+			order by cityId asc
+    	]]>
+    </sql>
+
+
+    <!-- 查询某个片区的实时统计数据，根据部门分组统计 -->
+    <sql id="queryChannelReport">
+        <![CDATA[
+    		SELECT
+				(CONCAT(parentId,'_',cityId,'_',channelId)) id,
+				channelName item,
+				IFNULL(SUM(t.totalCount),0) totalCount,
+                IFNULL(SUM(t.vaildCount),0) vaildCount,
+                IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+			FROM
+				new_real_report_market_region t
+			 WHERE t.queryTime  = #{params.queryTime}
+			AND cityId = #{params.cityId}
+
+			and parentId = #{params.parentId}
+
+			<#if childChannel?exists>
+				and channelId = #{params.childChannel}
+			</#if>
+			GROUP BY channelId
+			order by channelId asc
+    	]]>
+    </sql>
+
+
+    <sql id="getMaxLoadDateTime">
+        <![CDATA[
+			SELECT
+			DATE_FORMAT(max(queryTime),'%Y-%m-%d %H:%i:%s') queryTime
+			FROM new_real_report_market_region;
+		]]>
+    </sql>
+
+    <sql id="getNearQueryTime">
+        <![CDATA[
+			SELECT queryTime FROM new_real_report_market_region
+			WHERE queryTime >=#{params.beginTime} AND queryTime <= #{params.endTime}
+ 			ORDER BY ABS(DATE_FORMAT(queryTime,'%Y%m%d%H%i')-DATE_FORMAT(#{params.queryTime},'%Y%m%d%H%i')) ASC LIMIT 1
+		]]>
+    </sql>
+
+    <sql id="queryWholeRegionReport">
+        <![CDATA[
+    	SELECT
+    		20 as id,
+    		'全国' as item,
+			IFNULL(SUM(t.totalCount),0) totalCount,
+            IFNULL(SUM(t.vaildCount),0) vaildCount,
+            IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount,
+			t.queryTime
+		FROM
+			new_real_report_market_region t WHERE t.queryTime  = #{params.queryTime}
+    	]]>
+    </sql>
+
+    <!-- 查询销售部下面各个片区的总计 -->
+    <sql id="queryCityRegionReport">
+        <![CDATA[
+    		SELECT
+				cityId id,
+				cityName item,
+				IFNULL(SUM(t.totalCount),0) totalCount,
+                IFNULL(SUM(t.vaildCount),0) vaildCount,
+                IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+			FROM
+				`realreport`.`new_real_report_market_region` t
+			 WHERE t.queryTime  = #{params.queryTime}
+			 <#if childChannel?exists>
+				and channelId = #{params.childChannel}
+			</#if>
+			GROUP BY cityId
+    	]]>
+    </sql>
+
+    <sql id="queryRegionChannelReport">
+        <![CDATA[
+            select id, item, totalCount, vaildCount, appointDetectionCount
+            from (
+                select
+                    CONCAT(a.id,'_',#{params.id}) id,
+                    a.name as item,
+                    IFNULL(SUM(b.totalCount),0) totalCount,
+                    IFNULL(SUM(b.vaildCount),0) vaildCount,
+                    IFNULL(SUM(b.appointDetectionCount),0) appointDetectionCount
+                from `realreport`.`basic_source_kind` a
+                left join `realreport`.`new_real_report_market_region` b
+                on a.id = b.parentId and b.queryTime  = #{params.queryTime} and b.cityId = #{params.id}
+                <#if childChannel?exists>
+                    and channelId = #{params.childChannel}
+                </#if>
+
+                where a.supId=2 and a.flag=1
+                GROUP BY a.id
+
+                union
+
+                SELECT
+                    CONCAT(-2,'_',#{params.id}) id,
+                    '未指定分类' as item,
+                    IFNULL(SUM(t.totalCount),0) totalCount,
+                    IFNULL(SUM(t.vaildCount),0) vaildCount,
+                    IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+                FROM `realreport`.`new_real_report_market_region` t
+                WHERE t.queryTime  = #{params.queryTime}
+                <#if childChannel?exists>
+                    and channelId = #{params.childChannel}
+                </#if>
+                and parentId = -2 and cityId = #{params.id}
+            ) as result
+            <#if channel?exists>
+                where id = #{params.channel}
+            </#if>
+    	]]>
+    </sql>
+
+    <sql id="queryChildRegionChannelReport">
+        <![CDATA[
+			select CONCAT(a.id,'_',#{params.cityId}) as id,a.name as item,
+				IFNULL(SUM(b.totalCount),0) totalCount,
+                IFNULL(SUM(b.vaildCount),0) vaildCount,
+                IFNULL(SUM(b.appointDetectionCount),0) appointDetectionCount
+                from `realreport`.`basic_source_kind` a
+                left join `realreport`.`new_real_report_market_region` b
+                on a.id = b.parentId and b.queryTime  = #{params.queryTime} and  b.cityId = #{params.cityId}
+                 <#if childChannel?exists>
+                    and b.channelId = #{params.childChannel}
+                </#if>
+                where a.supId = #{params.parentId} and a.flag=1
+                <#if channel?exists>
+                    and id = #{params.channel}
+                </#if>
+                GROUP BY a.id
+        ]]>
+    </sql>
+
+    <sql id="queryCityChannelReport">
+        <![CDATA[
+    		SELECT
+				(CONCAT(parentId,'_',cityId,'_',channelId)) id,
+				b.name item,
+				IFNULL(SUM(t.totalCount),0) totalCount,
+                IFNULL(SUM(t.vaildCount),0) vaildCount,
+                IFNULL(SUM(t.appointDetectionCount),0) appointDetectionCount
+			FROM
+				`realreport`.`new_real_report_market_region` t
+				left join `realreport`.`basic_sys_dic` b on t.channelId = b.id
+			 WHERE t.queryTime  = #{params.queryTime}
+			AND cityId = #{params.cityId}
+            <#if childChannel?exists>
+				and channelId = #{params.childChannel}
+			</#if>
+			and parentId = #{params.parentId}
+			GROUP BY channelId
+			order by channelId asc
+    	]]>
+    </sql>
+
+    <sql id="getChildSource">
+        <![CDATA[
+			SELECT t.supId, count(0) as count
+			from `realreport`.`basic_source_kind` t
+			where t.flag=1
+			GROUP BY t.supId;
+		]]>
+    </sql>
+
+    <sql id="loadSource">
+        <![CDATA[
+			SELECT t.id, t.name as text from `realreport`.`basic_source_kind` t where t.supId=#{params.supId} and t.flag=1
+		]]>
+    </sql>
+
+    <sql id="loadAllChannel">
+        <![CDATA[
+			SELECT t.sourceId as id, t2.name as text,t.sourceKindId as parentId  from `realreport`.`basic_source_kind_map` t
+            LEFT JOIN `realreport`.`basic_source_kind` t1 on t1.id = t.sourceId and t1.kind=1 and t1.flag=1
+            LEFT JOIN `realreport`.`basic_sys_dic` t2 on t2.id = t.sourceId where t2.name is not null
+		]]>
+    </sql>
+
+    <sql id="querySmallChannelSortsReport">
+        <![CDATA[
+        select
+                CONCAT(#{params.id}, '_', a.channelId) as id,
+                b.`name` as item,
+                SUM(a.totalCount) as totalCount,
+                SUM(a.vaildCount) as vaildCount,
+                SUM(a.appointDetectionCount) as appointDetectionCount
+            from `realreport`.`new_real_report_market_region` a
+            left join `realreport`.`basic_sys_dic` b on a.channelId = b.id
+            where a.parentId=#{params.id} and a.queryTime=#{params.queryTime}
+            GROUP BY a.channelId;
+		]]>
+    </sql>
+
+    <sql id="querySmallChannelSortsCityReport">
+        <![CDATA[
+			select
+                cityId as id,
+                cityName as item,
+                totalCount as totalCount,
+                vaildCount as vaildCount,
+                appointDetectionCount as appointDetectionCount
+            from `realreport`.`new_real_report_market_region`
+            where channelId=#{params.id} and queryTime=#{params.queryTime};
+		]]>
+    </sql>
+
+
+</sqlMap>

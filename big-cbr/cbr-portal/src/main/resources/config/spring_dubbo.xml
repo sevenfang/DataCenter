@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--老报表dubbo服务接口-->
+    <dubbo:reference id="realreportConsumer" interface="com.chezhibao.bigdata.realreport.consumer.RealreportConsumer" timeout="2000" check="false" />
+    <!--数据源dubbo接口-->
+    <dubbo:reference id="wareHouseDao" interface="com.chezhibao.bigdata.dao.WareHouseDao" timeout="200000" check="false"  />
+    <dubbo:reference id="commonDao" interface="com.chezhibao.bigdata.dao.CommonDao" timeout="200000" check="false"  />
+    <dubbo:reference id="cBRCommonDao" interface="com.chezhibao.bigdata.dao.CBRCommonDao" timeout="200000" check="false"  />
+    <dubbo:reference id="bigdataDao" interface="com.chezhibao.bigdata.dao.BigdataDao" timeout="200000" check="false"  />
+    <dubbo:application name="${spring.dubbo.application.name}" />
+    <dubbo:registry address="${spring.dubbo.registry.address}" />
+</beans>

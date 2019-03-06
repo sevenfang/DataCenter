@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--查询全国的数据（当前）-->
+    <sql id="0">
+        <![CDATA[
+    	SELECT
+    		0 as id,
+    		'总计' as item,
+			SUM(t.newdatacount) newdatacount,
+			SUM(t.dataTackingCount) dataTackingCount,
+			SUM(t.appointDetectionCount) appointDetectionCount,
+			SUM(t.auctioncount) auctioncount,
+			SUM(t.notransactionCount) notransactionCount,
+			SUM(t.noserviceCharge) noserviceCharge,
+			SUM(is_login) loginCount,
+			queryTime
+		FROM
+			`realreport`.`new_real_report_ocsa` t WHERE 1=1
+			<#if params.queryTime?exists>
+			    and t.queryTime  = #{params.queryTime}
+			<#else>
+			    and t.queryTime = (select max(queryTime) from `realreport`.`new_real_report_ocsa`)
+			</#if>
+		<#if params.cityNames?exists>
+			AND Replace(t.orgName,'组','市') IN(#{params.cityNames})
+		</#if>
+			;
+    	]]>
+    </sql>
+    <!--查询全国的数据（对比）-->
+    <sql id="_0">
+        <![CDATA[
+    	SELECT
+    		0 as id,
+    		'总计' as item,
+			SUM(t.datatrack_target) dataTackingCount,
+			SUM(t.appointdetection_target) appointDetectionCount,
+			SUM(t.appointtrans_target) notransactionCount,
+			SUM(t.appointfee_target) noserviceCharge,
+			Count(cityname) count,
+			static_date queryTime
+		FROM
+			`realreport`.`ocsa_city_day_target` t WHERE 1=1
+			<#if params._queryTime?exists>
+			    and t.static_date  = #{params._queryTime}
+			<#else>
+			    and t.static_date = (select max(static_date) from `realreport`.`ocsa_city_day_target` where static_date >=current_date() )
+			</#if>
+		<#if params.cityNames?exists>
+			AND t.cityname IN(#{params.cityNames})
+		</#if>
+			;
+    	]]>
+    </sql>
+    <!--查询大区的数据（当前）-->
+    <sql id="1">
+        <![CDATA[
+    	SELECT
+    		saleAreaId as id,
+    		saleAreaName as item,
+			SUM(t.newdatacount) newdatacount,
+			SUM(t.dataTackingCount) dataTackingCount,
+			SUM(t.appointDetectionCount) appointDetectionCount,
+			SUM(t.auctioncount) auctioncount,
+			SUM(t.notransactionCount) notransactionCount,
+			SUM(t.noserviceCharge) noserviceCharge,
+			SUM(is_login) loginCount,
+			queryTime
+		FROM
+			`realreport`.`new_real_report_ocsa` t WHERE 1=1
+			<#if params.queryTime?exists>
+			    and t.queryTime  = #{params.queryTime}
+			<#else>
+			    and t.queryTime = (select max(queryTime) from `realreport`.`new_real_report_ocsa`)
+			</#if>
+		<#if params.cityNames?exists>
+			AND Replace(t.orgName,'组','市') IN(#{params.cityNames})
+		</#if>
+		GROUP BY saleAreaId
+		order by saleAreaId asc
+			;
+    	]]>
+    </sql>
+
+    <!--查询大区的数据（对比）-->
+    <sql id="_1">
+        <![CDATA[
+    	SELECT
+    	saleareaname as item,
+			saleareaname saleareaname,
+			SUM(t.datatrack_target) dataTackingCount,
+			SUM(t.appointdetection_target) appointDetectionCount,
+			SUM(t.appointtrans_target) notransactionCount,
+			SUM(t.appointfee_target) noserviceCharge,
+			Count(cityname) count,
+			static_date queryTime
+		FROM
+			`realreport`.`ocsa_city_day_target` t WHERE 1=1
+			<#if params._queryTime?exists>
+			    and t.static_date  = #{params._queryTime}
+			<#else>
+			    and t.static_date = (select max(static_date) from `realreport`.`ocsa_city_day_target` where static_date >=current_date())
+			</#if>
+		<#if params.cityNames?exists>
+			AND t.cityname IN(#{params.cityNames})
+		</#if>
+		GROUP BY saleareaname
+			;
+    	]]>
+    </sql>
+    <!--查询城市的数据（当前）-->
+    <sql id="2">
+        <![CDATA[
+    	SELECT
+    		orgID id,
+			orgName item,
+			SUM(t.newdatacount) newdatacount,
+			SUM(t.dataTackingCount) dataTackingCount,
+			SUM(t.appointDetectionCount) appointDetectionCount,
+			SUM(t.auctioncount) auctioncount,
+			SUM(t.notransactionCount) notransactionCount,
+			SUM(t.noserviceCharge) noserviceCharge,
+			SUM(is_login) loginCount,
+			queryTime
+		FROM
+			`realreport`.`new_real_report_ocsa` t WHERE 1=1
+			<#if params.queryTime?exists>
+			    and t.queryTime  = #{params.queryTime}
+			<#else>
+			    and t.queryTime = (select max(queryTime) from `realreport`.`new_real_report_ocsa`)
+			</#if>
+		<#if params.cityNames?exists>
+			AND Replace(t.orgName,'组','市') IN(#{params.cityNames})
+		</#if>
+		and saleAreaId=#{params.id}
+		GROUP BY orgID
+		order by orgId asc
+			;
+    	]]>
+    </sql>
+    <!--查询城市的数据（对比）-->
+    <sql id="_2">
+        <![CDATA[
+    	SELECT
+    	REPLACE(cityname,'市','组') as item,
+			REPLACE(cityname,'市','组') cityname,
+			SUM(t.datatrack_target) dataTackingCount,
+			SUM(t.appointdetection_target) appointDetectionCount,
+			SUM(t.appointtrans_target) notransactionCount,
+			SUM(t.appointfee_target) noserviceCharge,
+			Count(cityname) count,
+			static_date queryTime
+		FROM
+			`realreport`.`ocsa_city_day_target` t WHERE 1=1
+			and t.saleareaname = #{params._saleareaname}
+			<#if params._queryTime?exists>
+			    and t.static_date  = #{params._queryTime}
+			<#else>
+			    and t.static_date = (select max(static_date) from `realreport`.`ocsa_city_day_target` where static_date >=current_date())
+			</#if>
+		<#if params.cityNames?exists>
+			AND t.cityname IN(#{params.cityNames})
+		</#if>
+		GROUP BY cityname
+			;
+    	]]>
+    </sql>
+    <!--查询客服的数据（当前）-->
+    <sql id="3">
+        <![CDATA[
+    	SELECT
+    		(case when serviceId is null then -1 else  serviceid end)id,
+			serviceName item,
+			SUM(t.newdatacount) newdatacount,
+			SUM(t.dataTackingCount) dataTackingCount,
+			SUM(t.appointDetectionCount) appointDetectionCount,
+			SUM(t.auctioncount) auctioncount,
+			SUM(t.notransactionCount) notransactionCount,
+			SUM(t.noserviceCharge) noserviceCharge,
+			SUM(is_login) loginCount,
+			queryTime
+		FROM
+			`realreport`.`new_real_report_ocsa` t WHERE 1=1
+			<#if params.queryTime?exists>
+			    and t.queryTime  = #{params.queryTime}
+			<#else>
+			    and t.queryTime = (select max(queryTime) from `realreport`.`new_real_report_ocsa`)
+			</#if>
+		<#if params.cityNames?exists>
+			AND Replace(t.orgName,'组','市') IN(#{params.cityNames})
+		</#if>
+		and orgID=#{params.id}
+		GROUP BY serviceId
+		order by serviceId asc
+			;
+    	]]>
+    </sql>
+    <!--查询客服的数据（对比）-->
+    <sql id="_3">
+        <![CDATA[
+    	    SELECT
+    	    ocsaname as item,
+			ocsaname ocsaname,
+			SUM(t.datatrack_target) dataTackingCount,
+			SUM(t.appointdetection_target) appointDetectionCount,
+			SUM(t.appointtrans_target) notransactionCount,
+			SUM(t.appointfee_target) noserviceCharge,
+			Count(ocsaname) count,
+			static_date queryTime
+		FROM
+			`realreport`.`ocsa_day_target` t WHERE 1=1
+			and is_login=1
+			and t.ocsaname in (
+				SELECT name from `realreport`.`basic_sys_user` where `orgID` in(SELECT id from `realreport`.`basic_sys_org` where `idPath` like '/287/2091/2095/%' AND name=#{params._cityname})
+			)
+			<#if params._queryTime?exists>
+			    and t.static_date  = #{params._queryTime}
+			<#else>
+			    and t.static_date = (select max(static_date) from `realreport`.`ocsa_day_target` where static_date >=current_date())
+			</#if>
+		GROUP BY ocsaname
+			;
+    	]]>
+    </sql>
+</sqlMap>

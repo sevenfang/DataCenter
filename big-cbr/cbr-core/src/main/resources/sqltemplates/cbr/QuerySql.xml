@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储sql-->
+    <sql id="saveSql">
+        <![CDATA[
+            INSERT INTO `bigdata`.`t_cbr_sql` (
+                `order`,
+            	`realreportId`,
+            	`name`,
+            	`datasource`,
+            	`sql`,
+            	`createdTime`,
+            	`updatedTime`
+            )
+            VALUES
+            	(
+            	    #{params.order},
+            		#{params.realreportId},
+            		#{params.name},
+            		#{params.datasource},
+            		#{params.sql},
+            		#{params.createdTime},
+            		#{params.updatedTime}
+            	);
+    	]]>
+    </sql>
+    <!--根据指定的名称获取sql-->
+    <sql id="getSqlByName">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_sql` where realreportId= #{params.realreportId} and `name`=#{params.name};
+    	]]>
+    </sql>
+    <!--根据指定的名称获取sql-->
+    <sql id="getSqlByRealreportId">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_sql` where realreportId= #{params.realreportId} ORDER BY `order`;
+    	]]>
+    </sql>
+    <!--根据指定的名称更新sql-->
+    <sql id="updateSqlByName">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr_sql`
+            SET
+            `order` = #{params.order},
+             `datasource` = #{params.datasource},
+             `sql` = #{params.sql},
+             `updatedTime` = #{params.updatedTime}
+             WHERE realreportId= #{params.realreportId} and `name`=#{params.name};
+    	]]>
+    </sql>
+    <!--根据指定的ID更新sql-->
+    <sql id="updateSqlById">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr_sql`
+            SET
+            `order` = #{params.order},
+             `datasource` = #{params.datasource},
+             `sql` = #{params.sql},
+             `updatedTime` = #{params.updatedTime},
+             `name` = #{params.name}
+             WHERE realreportId= #{params.realreportId} and `id`=#{params.id};
+    	]]>
+    </sql>
+    <!--根据指定层级删除sql-->
+    <sql id="delSqlLevel">
+        <![CDATA[
+            DELETE from `bigdata`.`t_cbr_sql`
+             WHERE realreportId= #{params.realreportId} and `name`in (#{params.names});
+    	]]>
+    </sql>
+</sqlMap>

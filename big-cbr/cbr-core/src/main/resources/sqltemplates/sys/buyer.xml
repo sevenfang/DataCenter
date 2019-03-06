@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="getBuyerInfoByFzr">
+        <![CDATA[
+        SELECT
+        	*
+        FROM
+        	realreport.basic_buyer
+        WHERE 1=1
+           and status = 1
+           <#if params.fzrs?exists && (params.fzrs?size>0)>
+        	and fzr IN (#{params.fzrs})
+           </#if>
+         ]]>
+    </sql>
+</sqlMap>

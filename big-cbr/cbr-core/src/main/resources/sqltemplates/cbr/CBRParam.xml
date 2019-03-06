@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储参数-->
+    <sql id="saveParam">
+        <![CDATA[
+            INSERT INTO `bigdata`.`t_cbr_param` (
+            	`realreportId`,
+            	`label`,
+            	`order`,
+            	`paramName`,
+            	`type`,
+            	`value`,
+            	`createdTime`,
+            	`updatedTime`
+            )
+            VALUES
+            	(
+            		#{params.realreportId},
+            		#{params.label},
+            		#{params.order},
+            		#{params.paramName},
+            		#{params.type},
+            		#{params.value},
+            		#{params.createdTime},
+            		#{params.updatedTime}
+            	);
+    	]]>
+    </sql>
+    <!--根据指定的名称获取sql-->
+    <sql id="getParamByParamName">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_param` where realreportId= #{params.realreportId} and `paramName`=#{params.paramName};
+    	]]>
+    </sql>
+    <!--根据指定的名称获取sql-->
+    <sql id="getAllParamsByRealreportId">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_param` where realreportId= #{params.realreportId} ORDER BY `order`;
+    	]]>
+    </sql>
+    <!--通过报表ID删除指定字段-->
+    <sql id="deleteParamById">
+        <![CDATA[
+            DELETE FROM `bigdata`.`t_cbr_param` WHERE id in (#{params.ids});
+        ]]>
+    </sql>
+    <!--通过报表ID获得指定字段-->
+    <sql id="getParamById">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_param` WHERE id= #{params.id};
+        ]]>
+    </sql>
+    <!--根据指定的名称更新sql-->
+    <sql id="updateParamByName">
+        <![CDATA[
+           UPDATE `bigdata`.`t_cbr_param`
+           SET
+            `realreportId` = #{params.realreportId},
+            `label` = #{params.label},
+            `order` = #{params.order},
+            `paramName` = #{params.paramName},
+            `type` = #{params.type},
+            `value` = #{params.value},
+            `updatedTime` = #{params.updatedTime}
+             WHERE realreportId= #{params.realreportId} and `paramName`=#{params.paramName};
+    	]]>
+    </sql>
+    <!--根据指定的名称更新sql-->
+    <sql id="updateParamById">
+        <![CDATA[
+           UPDATE `bigdata`.`t_cbr_param`
+           SET
+            `realreportId` = #{params.realreportId},
+            `label` = #{params.label},
+            `order` = #{params.order},
+            `paramName` = #{params.paramName},
+            `type` = #{params.type},
+            `value` = #{params.value},
+            `updatedTime` = #{params.updatedTime}
+             WHERE id= #{params.id};
+    	]]>
+    </sql>
+</sqlMap>

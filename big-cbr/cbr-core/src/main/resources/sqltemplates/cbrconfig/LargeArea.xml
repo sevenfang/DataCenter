@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--查询大区信息-->
+    <sql id="getAllLargeArea">
+        <![CDATA[
+            SELECT * FROM `realreport`.`realreport_channel_area`
+         ]]>
+    </sql>
+    <!--更新大区信息-->
+    <sql id="updateLargeArea">
+        <![CDATA[
+            UPDATE `realreport`.`realreport_channel_area`
+            SET
+             `largeAreaName` = #{params.largeAreaName},
+             `largeAreaId` = #{params.largeAreaId},
+             `largeAreaPriority` = #{params.largeAreaPriority},
+             `createdTime` = #{params.createdTime},
+             `updatedTime` = #{params.updatedTime}
+            WHERE
+            	`id` = #{params.id}
+         ]]>
+    </sql>
+    <!--删除大区信息-->
+    <sql id="delLargeArea">
+        <![CDATA[
+            DELETE FROM `realreport`.`realreport_channel_area`
+            WHERE
+                `id` = #{params.id}
+         ]]>
+    </sql>
+    <!--删除大区信息-->
+    <sql id="saveLargeArea">
+        <![CDATA[
+            INSERT INTO `realreport`.`realreport_channel_area` (
+            	`largeAreaName`,
+            	`largeAreaId`,
+            	`largeAreaPriority`,
+            	`createdTime`,
+            	`updatedTime`
+            )
+            VALUES
+            	(
+            		#{params.largeAreaName},
+            		#{params.largeAreaId},
+            		#{params.largeAreaPriority},
+            		#{params.createdTime},
+            		#{params.updatedTime}
+            	)
+         ]]>
+    </sql>
+</sqlMap>

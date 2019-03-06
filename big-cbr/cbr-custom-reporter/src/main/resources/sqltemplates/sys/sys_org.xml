@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="get_under_user_orgid">
+        <![CDATA[
+        SELECT DISTINCT(id) FROM realreport.basic_sys_org WHERE 1 = 1
+        and idPath LIKE (CONCAT(#{params.idPath},'%'))
+        and id != #{params.id}
+         ]]>
+    </sql>
+    <sql id="getUnderOus">
+        <![CDATA[
+        SELECT DISTINCT(ou) FROM realreport.basic_sys_org WHERE 1 = 1
+        and idPath LIKE (CONCAT(#{params.idPath},'%'))
+        and id != #{params.id}
+        and ou is not null
+        group by ou
+         ]]>
+    </sql>
+
+
+    <sql id="get_user_org_info">
+        <![CDATA[
+        SELECT * FROM realreport.basic_sys_org
+         WHERE 1 = 1
+         and id = #{params.id};
+         ]]>
+    </sql>
+
+    <!--存储任信息-->
+    <sql id="trans_offline_to_online">
+        <![CDATA[
+        SELECT DISTINCT(id) FROM realreport.basic_sys_org
+        WHERE idPath LIKE '/287/2091/2095/%'
+        and ou!=0
+        and  ou in (
+            SELECT DISTINCT(ou) FROM realreport.basic_sys_org
+            WHERE 1=1
+            <#if params.orgIds?exists && (params.orgIds?size>0)>
+            AND id in (#{params.orgIds})
+            </#if>
+        )
+        ]]>
+    </sql>
+
+    <sql id="getAllOrgInfosByUserId">
+        <![CDATA[
+            select * from realreport.basic_sys_userpost where userId = #{params.userId} GROUP BY orgId
+        ]]>
+    </sql>
+    <sql id="getOfflineOrgIds">
+        <![CDATA[
+            select * from realreport.basic_sys_org where id in (#{params.orgIds}) and idPath LIKE '/287/2091/%'
+        ]]>
+    </sql>
+</sqlMap>

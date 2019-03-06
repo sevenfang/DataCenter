@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>big-parent</artifactId>
+        <groupId>com.chezhibao</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>big-cbr</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>cbr-custom-reporter</module>
+        <module>cbr-download</module>
+        <module>cbr-core</module>
+        <module>cbr-portal</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>config-client</artifactId>
+            <version>2.3.6-SNAPSHOT</version>
+        </dependency>
+        <!--老报表dubbo服务接口-->
+        <dependency>
+            <artifactId>bigdata-realreport-interface</artifactId>
+            <groupId>com.chezhibao</groupId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+        <!--数据库访问dubbo接口-->
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>bigdata-dbms-interface</artifactId>
+            <version>1.2.5-SNAPSHOT</version>
+        </dependency>
+        <!--权限管理-->
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>big-auth</artifactId>
+            <version>0.1.3-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

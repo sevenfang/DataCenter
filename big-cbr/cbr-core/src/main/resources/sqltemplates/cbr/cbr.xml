@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储sql-->
+    <sql id="saveCBR">
+        <![CDATA[
+            INSERT INTO `bigdata`.`t_cbr` (
+            	`realreportId`,
+            	`realreportName`,
+            	`level`,
+            	`desc`,
+            	`createdTime`,
+            	`updatedTime`
+            )
+            VALUES
+            	(#{params.realreportId},#{params.realreportName},  #{params.level},#{params.desc}, #{params.createdTime}, #{params.updatedTime});
+    	]]>
+    </sql>
+    <!--根据realreportId获取报表信息-->
+    <sql id="getCbrById">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr` WHERE realreportId=#{params.realreportId};
+    	]]>
+    </sql>
+    <!--获取所有报表信息-->
+    <sql id="getAllCBR">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr` where status = 1 order by createdTime ;
+    	]]>
+    </sql>
+    <!--根据realreportId更新报表信息-->
+    <sql id="updateCBR">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr`
+            SET
+             `level` = #{params.level},
+             `realreportName` = #{params.realreportName},
+             `desc` = #{params.desc},
+             `updatedTime` = #{params.updatedTime}
+             WHERE realreportId=#{params.realreportId};
+    	]]>
+    </sql>
+    <!--根据realreportId更新报表状态-->
+    <sql id="changeStatusById">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr`
+            SET
+             `status` = #{params.status}
+             WHERE realreportId=#{params.realreportId};
+    	]]>
+    </sql>
+    <!--根据realreportId更新报表层级-->
+    <sql id="changeLevelById">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr`
+            SET
+             `level` = #{params.level}
+             WHERE realreportId=#{params.realreportId};
+    	]]>
+    </sql>
+</sqlMap>

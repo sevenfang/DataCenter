@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储字段-->
+    <sql id="saveColumn">
+        <![CDATA[
+            INSERT INTO `bigdata`.`t_cbr_column` (
+            	`realreportId`,
+            	`order`,
+            	`title`,
+            	`key`,
+            	`width`,
+            	`func`,
+            	`text`,
+            	`style`,
+            	`createdTime`,
+            	`updatedTime`
+            )
+            VALUES
+            	(
+            		#{params.realreportId},
+            		#{params.order},
+            		#{params.title},
+            		#{params.key},
+            		#{params.width},
+            		#{params.func},
+            		#{params.text},
+            		#{params.style},
+            		#{params.createdTime},
+            		#{params.updatedTime}
+            	);
+    	]]>
+    </sql>
+    <!--通过报表ID和字段序号获得指定字段-->
+    <sql id="getColumnByRealreportIdAndKey">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_column` WHERE realreportId= #{params.realreportId} and `key`=#{params.key};
+        ]]>
+    </sql>
+    <!--通过报表ID删除指定字段-->
+    <sql id="deleteColumnById">
+        <![CDATA[
+            DELETE FROM `bigdata`.`t_cbr_column` WHERE id in (#{params.ids});
+        ]]>
+    </sql>
+    <!--通过报表ID获得指定字段-->
+    <sql id="getColumnById">
+        <![CDATA[
+            SELECT *  FROM `bigdata`.`t_cbr_column` WHERE id= #{params.id};
+        ]]>
+    </sql>
+    <!--通过报表ID和字段序号获得指定字段-->
+    <sql id="getColumnByRealreportId">
+        <![CDATA[
+            SELECT * FROM `bigdata`.`t_cbr_column` WHERE realreportId= #{params.realreportId} ORDER BY `order`;
+        ]]>
+    </sql>
+    <!--通过报表ID和字段序号更新指定字段-->
+    <sql id="updateColumnByRealreportIdAndKey">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr_column`
+            SET
+            `order` = #{params.order},
+             `title` = #{params.title},
+             `key` = #{params.key},
+             `width` = #{params.width},
+             `func` = #{params.func},
+             `text` = #{params.text},
+             `style` = #{params.style},
+             `updatedTime` = #{params.updatedTime}
+            WHERE
+            	realreportId = #{params.realreportId}
+            AND `key` = #{params.key};
+        ]]>
+    </sql>
+    <!--通过报表ID和字段序号更新指定字段-->
+    <sql id="updateColumnById">
+        <![CDATA[
+            UPDATE `bigdata`.`t_cbr_column`
+            SET realreportId = #{params.realreportId},
+            `order` = #{params.order},
+             `title` = #{params.title},
+             `key` = #{params.key},
+             `width` = #{params.width},
+             `func` = #{params.func},
+             `text` = #{params.text},
+             `style` = #{params.style},
+             `updatedTime` = #{params.updatedTime}
+            WHERE
+            	id = #{params.id};
+        ]]>
+    </sql>
+</sqlMap>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap namespace="newCustomer">
+
+	<!-- =======================线上运营指标报表start========================== -->
+	<!-- 查询整个销售部实时的总计 -->
+	<sql id="queryWholeReport">
+    	<![CDATA[
+    	SELECT
+    		0 as id,
+    		t.queryTime as item,
+			SUM(t.totalCount) totalCount,
+			SUM(t.newdatacount) newdatacount,
+			SUM(t.vaildCount) vaildCount,
+			SUM(t.dataTackingCount) dataTackingCount,
+			SUM(t.appointDetectionCount) appointDetectionCount,
+			SUM(t.transactionCount) transactionCount,
+			SUM(t.serviceCharge) serviceCharge,
+			SUM(t.newtransactionCount) newtransactionCount,
+			ROUND(IFNULL(SUM(t.serviceCharge)/SUM(t.transactionCount),0),0) as serviceChargeAve,
+			SUM(t.notransactionCount) notransactionCount,
+			SUM(t.noserviceCharge) noserviceCharge,
+			SUM(t.jmc_datatackingcount) jmc_dataTackingCount,
+			SUM(t.jmc_transactioncount) jmc_transactionCount,
+			SUM(t.jmc_servicecharge) jmc_serviceCharge,
+			SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(t.cuochetransactioncount , 0)) smc_transactionCount,
+				SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(cuocheservicecharge,0)) smc_serviceCharge,
+				ROUND(IFNULL((SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(t.cuocheservicecharge , 0)))/(SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(cuochetransactioncount,0))),0),0) smc_serviceChargeAve,
+			SUM(t.cuochestartcount) cuocheStartCount,
+			SUM(t.cuochetransactioncount) cuocheTransactionCount,
+			ROUND(IFNULL(SUM(t.noserviceCharge)/SUM(t.notransactionCount),0),0) as noserviceChargeAve
+		FROM
+			`realreport`.`new_real_report_ocsa` t WHERE t.queryTime  = #{params.queryTime}
+			<#if params.orgIds?exists>
+				AND t.orgID IN(#{params.orgIds}) 
+			</#if>
+			;
+    	]]>
+	</sql>
+
+	<!-- 查询销售部下面各个片区的总计 -->
+	<sql id="querySaleDeptReport">
+    	<![CDATA[
+    		SELECT
+				saleAreaId id,
+				saleAreaName item,
+				SUM(t.totalCount) totalCount,
+				SUM(t.newdatacount) newdatacount,
+				SUM(t.vaildCount) vaildCount,
+				SUM(t.dataTackingCount) dataTackingCount,
+				SUM(t.dataTackingCount) dataTackingCount,
+				SUM(t.appointDetectionCount) appointDetectionCount,
+				SUM(t.transactionCount) transactionCount,
+				SUM(t.serviceCharge) serviceCharge,
+				SUM(t.newtransactionCount) newtransactionCount,
+				ROUND(IFNULL(SUM(t.serviceCharge)/SUM(t.transactionCount),0),0) as serviceChargeAve,
+				SUM(t.notransactionCount) notransactionCount,
+				SUM(t.noserviceCharge) noserviceCharge,
+			    SUM(t.jmc_datatackingcount) jmc_dataTackingCount,
+			    SUM(t.jmc_transactioncount) jmc_transactionCount,
+			    SUM(t.jmc_servicecharge) jmc_serviceCharge,
+			    SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(t.cuochetransactioncount , 0)) smc_transactionCount,
+				SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(cuocheservicecharge,0)) smc_serviceCharge,
+				ROUND(IFNULL((SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(t.cuocheservicecharge , 0)))/(SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(cuochetransactioncount,0))),0),0) smc_serviceChargeAve,
+				SUM(t.cuochestartcount) cuocheStartCount,
+				SUM(t.cuochetransactioncount) cuocheTransactionCount,
+				ROUND(IFNULL(SUM(t.noserviceCharge)/SUM(t.notransactionCount),0),0) as noserviceChargeAve,
+				t.queryTime
+			FROM
+				`realreport`.`new_real_report_ocsa` t
+			WHERE t.queryTime  = #{params.queryTime}
+			<#if params.orgIds?exists>
+				AND t.orgID IN(#{params.orgIds})
+			</#if>
+			GROUP BY saleAreaId
+			order by saleAreaId asc
+    	]]>
+	</sql>
+
+	<!-- 查询某个片区的实时统计数据，根据部门分组统计 -->
+	<sql id="querySaleAreaReport">
+    	<![CDATA[
+    		SELECT
+				orgID id,
+				orgName item,
+				SUM(t.totalCount)totalCount,
+				SUM(t.newdatacount) newdatacount,
+				SUM(t.vaildCount)vaildCount,
+				SUM(t.dataTackingCount) dataTackingCount,
+				SUM(t.dataTackingCount)dataTackingCount,
+				SUM(t.appointDetectionCount)appointDetectionCount,
+				SUM(t.transactionCount)transactionCount,
+				SUM(t.newtransactionCount) newtransactionCount,
+				SUM(t.serviceCharge)serviceCharge,
+				ROUND(IFNULL(SUM(t.serviceCharge)/SUM(t.transactionCount),0),0) as serviceChargeAve,
+				SUM(t.notransactionCount) notransactionCount,
+				SUM(t.noserviceCharge) noserviceCharge,
+			    SUM(t.jmc_datatackingcount) jmc_dataTackingCount,
+			    SUM(t.jmc_transactioncount) jmc_transactionCount,
+			    SUM(t.jmc_servicecharge) jmc_serviceCharge,
+			    SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(t.cuochetransactioncount , 0)) smc_transactionCount,
+				SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(cuocheservicecharge,0)) smc_serviceCharge,
+				ROUND(IFNULL((SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(t.cuocheservicecharge , 0)))/(SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(cuochetransactioncount,0))),0),0) smc_serviceChargeAve,
+				SUM(t.cuochestartcount) cuocheStartCount,
+				SUM(t.cuochetransactioncount) cuocheTransactionCount,
+				ROUND(IFNULL(SUM(t.noserviceCharge)/SUM(t.notransactionCount),0),0) as noserviceChargeAve
+			FROM
+				`realreport`.`new_real_report_ocsa` t
+			 WHERE t.queryTime  = #{params.queryTime}
+			 <#if params.orgIds?exists>
+				AND t.orgID IN(#{params.orgIds})
+			</#if>
+			 AND saleAreaId = #{params.id}
+			 GROUP BY orgID
+			 order by orgId asc 
+    	]]>
+	</sql>
+
+	<!-- 查询某个城市对应的实时数据统计 -->
+	<sql id="queryCityReport">
+    	<![CDATA[
+    		
+			SELECT
+				(case when serviceId is null then -1 else  serviceid end)id,
+				serviceName item,
+				SUM(t.totalCount)totalCount,
+				SUM(t.newdatacount) newdatacount,
+				SUM(t.vaildCount)vaildCount,
+			    SUM(t.dataTackingCount) dataTackingCount,
+				SUM(t.dataTackingCount) dataTackingCount,
+				SUM(t.appointDetectionCount)appointDetectionCount,
+				SUM(t.transactionCount)transactionCount,
+				SUM(t.newtransactionCount) newtransactionCount,
+				SUM(t.serviceCharge)serviceCharge,
+				ROUND(IFNULL(SUM(t.serviceCharge)/SUM(t.transactionCount),0),0) as serviceChargeAve,
+				SUM(t.notransactionCount) notransactionCount,
+				SUM(t.noserviceCharge) noserviceCharge,
+			    SUM(t.jmc_datatackingcount) jmc_dataTackingCount,
+			    SUM(t.jmc_transactioncount) jmc_transactionCount,
+			    SUM(t.jmc_servicecharge) jmc_serviceCharge,
+			    SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(t.cuochetransactioncount , 0)) smc_transactionCount,
+				SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(cuocheservicecharge,0)) smc_serviceCharge,
+				ROUND(IFNULL((SUM(t.serviceCharge) - SUM(t.jmc_servicecharge) - SUM(ifnull(t.cuocheservicecharge , 0)))/(SUM(t.transactionCount) - SUM(t.jmc_transactioncount) - SUM(ifnull(cuochetransactioncount,0))),0),0) smc_serviceChargeAve,
+				SUM(t.cuochestartcount) cuocheStartCount,
+				SUM(t.cuochetransactioncount) cuocheTransactionCount,
+				ROUND(IFNULL(SUM(t.noserviceCharge)/SUM(t.notransactionCount),0),0) as noserviceChargeAve,
+				t.queryTime
+			FROM
+				`realreport`.`new_real_report_ocsa` t
+			 WHERE t.queryTime  = #{params.queryTime}
+			 <#if params.orgIds?exists>
+				AND t.orgID IN (#{params.orgIds})
+			</#if>
+			AND orgID = #{params.id}
+			GROUP BY serviceId
+			order by serviceId asc 
+    	]]>
+	</sql>
+
+	<sql id="getMaxLoadDateTime">
+    	<![CDATA[
+			SELECT  max(queryTime) queryTime FROM `realreport`.`new_real_report_ocsa`;
+		]]>
+	</sql>
+
+	<sql id="getNearQueryTime">
+		<![CDATA[
+			SELECT queryTime FROM `realreport`.`new_real_report_ocsa`
+			WHERE queryTime >=#{params.beginTime} AND queryTime <=#{params.endTime}
+ 			ORDER BY ABS(DATE_FORMAT(queryTime,'%Y%m%d%H%i')-DATE_FORMAT(#{params.queryTime},'%Y%m%d%H%i')) ASC LIMIT 1   
+
+		]]>
+	</sql>
+	<!-- =======================线上运营指标报表end========================== -->
+	<!-- =======================OCSA报表start========================== -->
+	<sql id="getMaxLoadOCSADateTimeNew">
+		<![CDATA[
+			SELECT  max(cutime) queryTime FROM `realreport`.`ocsa_call_duration_hour_new`
+		]]>
+	</sql>
+	<sql id="queryOCSADataNew">
+		<![CDATA[
+			SELECT
+				<#if params.type==0>
+				0 AS id,
+				'全国' AS item,
+			</#if>
+			<#if params.type==1>
+				regionid AS id,
+				region AS item,
+			</#if>
+			<#if params.type==2>
+				cityid AS id,
+				city AS item,
+			</#if>
+			<#if params.type==3>
+				ocsaid AS id,
+				ocsaname AS item,
+			</#if>
+				TRUNCATE(SUM(t.calldurtotal) / COUNT(case when t.calldurtotal>0 then ocsaid else null end) / 60, 1) AS calldurtotal,
+				TRUNCATE(SUM(t.calldurtotal) / COUNT(case when t.calldurtotal>0 then ocsaid else null end) / SUM(t.connecttotal) * COUNT(case when t.calldurtotal>0 then ocsaid else null end) / 60, 1)   AS effective_per_capita ,
+				FLOOR(SUM(t.oneconnecttotal) / SUM(t.connecttotal) * 100) AS oneconnecttotal,
+				FLOOR(SUM(t.threeconnecttotal) / SUM(t.connecttotal) * 100) AS threeconnecttotal,
+				FLOOR(SUM(t.connecttotal) / COUNT(case when t.calldurtotal>0 then ocsaid else null end)) AS outcallrealtotal,
+				FLOOR(SUM(t.outcalltotal) / COUNT(case when t.calldurtotal>0 then ocsaid else null end)) AS outcalltotal,
+				TRUNCATE((SUM(t.outcallrealtotal)/SUM(t.outcalltotal)) * 100, 2) AS outcall_accounted,
+				COUNT(case when t.calldurtotal>0 then ocsaid else null end) - SUM(case when t.calldurtotal>0  then detectflag else 0 end) AS detectflag,
+				SUM(transflag) AS transflag
+				FROM
+				`realreport`.`ocsa_call_duration_hour_new` t
+				WHERE t.cutime  = #{params.queryTime}
+			<#if params.cityIds?exists>
+				AND t.cityid IN(#{params.cityIds})
+			</#if>
+			<#if params.type==1>
+				GROUP BY regionid
+				order by regionid asc
+			</#if>
+			<#if params.type==2>
+				AND regionid = #{params.id}
+				GROUP BY cityid
+				order by cityid asc
+			</#if>
+			<#if params.type==3>
+				AND cityid = #{params.id}
+				GROUP BY ocsaid
+				order by ocsaid asc
+			</#if>
+			]]>
+	</sql>
+	<sql id="deleteOCSADataNew">
+		<![CDATA[
+				DELETE FROM `realreport`.`ocsa_call_duration_hour_new` WHERE cutime < DATE_ADD(NOW(),INTERVAL -5 DAY);
+			]]>
+	</sql>
+	<sql id="getOCSANearQueryTimeNew">
+		<![CDATA[
+			SELECT cutime queryTime FROM `realreport`.`ocsa_call_duration_hour_new`
+			WHERE cutime <=DATE_ADD(#{params.queryTime},INTERVAL -1 DAY)
+			ORDER BY cutime DESC LIMIT 1;
+		]]>
+	</sql>
+	<!-- =======================OCSA报表end============================ -->
+
+</sqlMap>
