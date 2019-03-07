@@ -18,6 +18,10 @@ public class ApiInfo {
      */
     private String uri;
     /**
+     * api描述信息
+     */
+    private String desc;
+    /**
      * 后端服务类型 http dubbo
      */
     private String type;
@@ -166,11 +170,20 @@ public class ApiInfo {
         this.status = status;
     }
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     @Override
     public String toString() {
         return "ApiInfo{" +
                 "id=" + id +
                 ", uri='" + uri + '\'' +
+                ", desc='" + desc + '\'' +
                 ", type='" + type + '\'' +
                 ", method='" + method + '\'' +
                 ", timeout=" + timeout +

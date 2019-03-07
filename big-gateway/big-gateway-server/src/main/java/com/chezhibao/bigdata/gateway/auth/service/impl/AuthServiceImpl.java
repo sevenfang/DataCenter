@@ -48,14 +48,20 @@ public class AuthServiceImpl implements AuthService {
         String userId = null;
         for(Cookie c : cookies){
             String domain = c.domain();
-            if(StringUtils.isEmpty(domain)) continue;
+            if(StringUtils.isEmpty(domain)) {
+                continue;
+            }
             String name = c.name();
-            if(StringUtils.isEmpty(name)) continue;
+            if(StringUtils.isEmpty(name)) {
+                continue;
+            }
             if(domain.equals(DOMAIN) && name.equals(LOGIN_USER_ID)){
                 userId = c.value();
             }
         }
-        if(StringUtils.isEmpty(userId)) throw new LoginException("没有登陆");
+        if(StringUtils.isEmpty(userId)) {
+            throw new LoginException("没有登陆");
+        }
         //判断是否登陆
         Boolean login = loginCheck.isLogin(userId);
         if(!login){

@@ -1,5 +1,6 @@
 package com.chezhibao.bigdata.gateway.core.service.impl;
 
+import com.chezhibao.bigdata.gateway.core.service.RedisApiServiceDelegate;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
 import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.service.ApiService;
@@ -17,8 +18,12 @@ public class ApiServiceImpl implements ApiService {
     @Autowired
     private ApiServiceDelegate apiServiceDelegate;
 
+    @Autowired
+    private RedisApiServiceDelegate redisApiServiceDelegate;
+
     @Override
     public ApiInfo getApiInfo(ApiInfoBO apiInfoBO) {
-        return apiServiceDelegate.doGetApiInfo(apiInfoBO);
+//        return apiServiceDelegate.doGetApiInfo(apiInfoBO);
+        return redisApiServiceDelegate.doGetApiInfo(apiInfoBO);
     }
 }
