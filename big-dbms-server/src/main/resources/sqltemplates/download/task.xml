@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取任务信息-->
+    <sql id="query">
+        <![CDATA[
+        select * from t_dbms_download
+        where 1 = 1
+        <#if params.id>
+           and id=#{params.id}
+        </#if>
+        <#if params.userId>
+           and userId=#{params.userId}
+        </#if>
+        <#if params.taskName>
+           and taskName=#{params.taskName}
+        </#if>
+        ]]>
+    </sql>
+    <!--存储任务信息-->
+    <sql id="save">
+        <![CDATA[
+        INSERT INTO `t_dbms_download` (
+        	`taskName`,
+        	`sql`,
+        	`status`,
+        	`userId`,
+        	`datasource`,
+        	`createdTime`,
+        	`updatedTime`
+        )
+        VALUES
+        	(
+        		#{params.taskName},
+        		#{params.sql},
+        		#{params.status},
+        		#{params.userId},
+        		#{params.datasource},
+        		#{params.createdTime},
+        		#{params.updatedTime}
+        	);
+        ]]>
+    </sql>
+    <!--删除任务信息-->
+    <sql id="delete">
+        <![CDATA[
+        DELETE FROM `t_dbms_download`
+        WHERE
+            id=#{params.id}
+            <#if params.userId>
+            and `userId` = #{params.userId},
+        </#if>
+        ]]>
+    </sql>
+    <!--更新任务信息-->
+    <sql id="updateTask">
+        <![CDATA[
+        UPDATE `t_dbms_download`
+        SET
+        <#if params.taskName>
+           `taskName` = #{params.taskName},
+        </#if>
+        <#if params.datasource>
+           `datasource` = #{params.datasource},
+        </#if>
+        <#if params.status>
+           `status` = #{params.status},
+        </#if>
+        <#if params.userId>
+           `userId` = #{params.userId},
+        </#if>
+        <#if params.createdTime>
+           `createdTime` = #{params.createdTime},
+        </#if>
+         `updatedTime` = #{params.updatedTime}
+        WHERE 1 = 1
+            <#if params.id>
+               and `id` = #{params.id}
+            </#if>
+            <#if params.taskName>
+                and `taskName` = #{params.taskName}
+            </#if>
+        ]]>
+    </sql>
+</sqlMap>

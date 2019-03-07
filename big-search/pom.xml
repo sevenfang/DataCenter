@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>big-parent</artifactId>
+        <groupId>com.chezhibao</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>search</artifactId>
+    <packaging>pom</packaging>
+    <version>2.4.2-SNAPSHOT</version>
+    <modules>
+        <module>search-protal</module>
+        <module>search-other</module>
+        <module>search-recommend</module>
+        <module>search-feed</module>
+        <module>search-common</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>config-client</artifactId>
+            <version>2.3.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>bigdata-dbms-interface</artifactId>
+            <version>1.2.5-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>bigdata-search-interface</artifactId>
+            <version>1.16-SNAPSHOT</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.chezhibao</groupId>-->
+            <!--<artifactId>api-intf</artifactId>-->
+            <!--<version>AUCS-347-SNAPSHOT</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>*</groupId>-->
+                    <!--<artifactId>*</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>com.chezhibao</groupId>
+            <artifactId>bigdata-msg-interface</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

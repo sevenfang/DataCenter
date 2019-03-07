@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取人员角色-->
+    <sql id="getUserRoles">
+        <![CDATA[
+        SELECT
+        	`role`.`id`,
+        	`role`.`name`,
+        	`role`.`code`
+        FROM
+        	`realreport`.`t_sys_role` role
+        LEFT JOIN `realreport`.`t_sys_userrole` userrole ON userrole.roleid = role.id
+        WHERE
+        	role.flag = 1
+        AND userrole.flag = 1
+        AND userrole.userid =#{params.userId}
+         ]]>
+    </sql>
+    <!--获取人员IdPath-->
+    <sql id="getIdPathsById">
+        <![CDATA[
+        SELECT DISTINCT(orgIdPath) idPath from `realreport`.`basic_sys_userorg` where userid = #{params.userId}
+         ]]>
+    </sql>
+</sqlMap>

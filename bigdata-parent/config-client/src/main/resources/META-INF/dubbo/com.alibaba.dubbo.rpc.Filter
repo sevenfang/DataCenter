@@ -1,0 +1,2 @@
+clothoConsumerFilter=com.chezhibao.bigdata.config.client.clotho.ClothoConsumerFilter
+clothoProviderFilter=com.chezhibao.bigdata.config.client.clotho.ClothoProviderFilter

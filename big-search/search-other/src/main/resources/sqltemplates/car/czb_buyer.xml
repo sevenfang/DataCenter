@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取车商所在城市-->
+    <sql id="getBuyerCity">
+        <![CDATA[
+        select region from chezhibao.t_buyer
+        <#if params.buyer_id>
+           where id=#{params.buyer_id}
+        </#if>
+       ]]>
+    </sql>
+
+    <!--获取车商所在省的所有城市-->
+    <sql id="getBuyerCityList">
+        <![CDATA[
+        select id
+        from chezhibao.t_sys_dic
+        where pid in
+        (select t2.pid from chezhibao.t_buyer t1
+        left join chezhibao.t_sys_dic t2 on t1.region=t2.id
+        <#if params.buyer_id>
+           where t1.id=#{params.buyer_id}
+        </#if>
+         )
+       ]]>
+    </sql>
+
+    <!--获取车商订阅的车系id-->
+    <sql id="getBuyerSubscriptCarSeries">
+        <![CDATA[
+        select modelids
+        from chezhibao.t_buyer_subscription_new
+        <#if params.buyer_id>
+           where buyerid=#{params.buyer_id}
+           and modelids <>0
+        </#if>
+       ]]>
+    </sql>
+
+    <!--获取车商订阅的品牌id-->
+    <sql id="getBuyerSubscriptCarBrand">
+        <![CDATA[
+        select brandids
+        from chezhibao.t_buyer_subscription_new
+        <#if params.buyer_id>
+           where buyerid=#{params.buyer_id}
+           and modelids=0
+        </#if>
+       ]]>
+    </sql>
+
+    <!--根据渠道获取商户-->
+    <sql id="getBuyerByChannelId">
+        <![CDATA[
+        select ID from chezhibao.t_buyer
+        <#if params.fzr>
+           where fzr=#{params.fzr}
+        </#if>
+        limit 40
+       ]]>
+    </sql>
+
+</sqlMap>

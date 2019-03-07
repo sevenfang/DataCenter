@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取制定车系、等级、场次的竞拍车辆id-->
+    <sql id="getDBInstancesAndName">
+        <![CDATA[
+            select
+             *
+             from t_dbms_datasources;
+        ]]>
+    </sql>
+    <sql id="getDBInstances">
+        <![CDATA[
+            select
+             *
+             from t_dbms_datasources
+             where 1 = 1
+             <#if params.names>
+                and name in (#{params.names})
+             </#if>;
+        ]]>
+    </sql>
+    <sql id="getDBInstanceById">
+        <![CDATA[
+            select
+             *
+             from t_dbms_datasources where id=#{params.id};
+        ]]>
+    </sql>
+    <sql id="delDBInstance">
+        <![CDATA[
+            DELETE
+            FROM
+            	`t_dbms_datasources`
+            WHERE
+            	id = #{params.id};
+        ]]>
+    </sql>
+    <sql id="saveDBInstance">
+        <![CDATA[
+              INSERT INTO `t_dbms_datasources` (
+              	`name`,
+              	`host`,
+              	`port`,
+              	`username`,
+              	`extraFields`,
+              	`createdTime`,
+              	`updatedTime`,
+              	`dbType`
+              )
+              VALUES
+              	(
+              		#{params.name},
+              		#{params.host},
+              		#{params.port},
+              		#{params.username},
+              		#{params.extraFields},
+              		#{params.createdTime},
+              		#{params.updatedTime},
+              		#{params.dbType}
+              	) ;
+        ]]>
+    </sql>
+    <sql id="UpdateDBInstance">
+        <![CDATA[
+            UPDATE `t_dbms_datasources`
+            SET
+            <#if params.name>
+             `name` = #{params.name},
+             </#if>
+             <#if params.url>
+             `url` = #{params.url},
+              </#if>
+             <#if params.username>
+             `username` = #{params.username},
+             </#if>
+             <#if params.password>
+             `password` = #{params.password},
+             </#if>
+             <#if params.extraFields>
+             `extraFields` = #{params.extraFields},
+             </#if>
+             <#if params.createdTime>
+             `createdTime` = #{params.createdTime},
+             </#if>
+             <#if params.updatedTime>
+             `updatedTime` = #{params.updatedTime},
+             </#if>
+             <#if params.dbType>
+             `dbType` = #{params.dbType}
+             </#if>
+            WHERE
+            `id` = #{params.id};
+        ]]>
+    </sql>
+</sqlMap>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--查询一口价有效推荐信息-->
+    <sql id="getEffectivePushMessage">
+        <![CDATA[
+            SELECT
+            	*
+            FROM
+            	dw_new.`ol_recommend_push`
+            WHERE
+            	cutime > DATE_ADD(NOW(), INTERVAL - 1 HOUR)
+            	and nowToken != 'noToken'
+            ORDER BY
+            	cutime DESC;
+        ]]>
+    </sql>
+
+</sqlMap>

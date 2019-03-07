@@ -1,0 +1,948 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取制定车系、等级、场次的竞拍车辆id-->
+    <sql id="getGuessCars">
+        <![CDATA[
+        select
+        id
+        from aucs.ams_car where status<>0
+        <#if params.carRatings>
+           and carRating in (#{params.carRatings})
+        </#if>
+        <#if params.carModels>
+           and carModel in (#{params.carModels})
+        </#if>
+        <#if (params.carSessions)>
+           and screenId in (#{params.carSessions})
+        </#if>
+        <#if params.start>
+                and overTime> #{params.start}
+           </#if>
+        <#if params.end>
+                and overTime< #{params.end}
+        </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同 品牌、车系  车辆并且出价次数小于10,并且与商户所在城市的车辆-->
+    <sql id="getGuessRecommdByBuyerCityModel">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and  t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.cityid>
+                and t0.carCity =#{params.cityid}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.status=502
+             and t0.flag=1
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同车系 车辆并且出价次数小于10,并且与商户所在城市的车辆-->
+    <sql id="getGuessRecommdByBuyerCitySeries">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on  t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where t1.status=502
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.cityid>
+                and t0.carCity =#{params.cityid}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.auctionType=1
+             and t0.flag=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌 车辆并且出价次数小于10,并且与商户所在城市的车辆-->
+    <sql id="getGuessRecommdByBuyerCityBrand">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where t1.status=502
+             <#if params.now>
+               and t0.overTime>#{params.now}
+               and t1.startTime<#{params.now}
+             </#if>
+             <#if params.cityid>
+               and t0.carCity =#{params.cityid}
+             </#if>
+             <#if params.auctioncarid>
+               and  t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.auctionType=1
+             and t0.flag=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌、车系车辆并且出价次数小于10,并且与商户所在城市的车辆-->
+    <sql id="getGuessRecommdByBuyerCityBrandModel">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel,carType
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel and t0.carType=tt.carType
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             and tt.carType is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.cityid>
+                and t0.carCity =#{params.cityid}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.status=502
+             and t0.flag=1
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌、车系、车型 车辆并且出价次数小于10,并且与商户所在省份的车辆-->
+    <sql id="getGuessRecommdByBrandModel">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel,carType
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel and t0.carType=tt.carType
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             and tt.carType is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.citylist>
+                and t0.carCity in (#{params.citylist})
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.status=502
+             and t0.flag=1
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相品牌、车系 车辆并且出价次数小于10,并且与商户所在省份的车辆-->
+    <sql id="getGuessRecommdByModel">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.citylist>
+                and t0.carCity in (#{params.citylist})
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.status=502
+             and t0.flag=1
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同 车系  车辆并且出价次数小于10,并且与商户所在省份的车辆-->
+    <sql id="getGuessRecommdBySeries">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carModel is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.citylist>
+                and t0.carCity in (#{params.citylist})
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t0.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌、车系、车型 车辆并且出价次数小于10,并且与商户所在省份的车辆-->
+    <sql id="getGuessRecommdByBrand">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.citylist>
+                and t0.carCity in (#{params.citylist})
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t0.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌、车系车辆并且出价次数小于10,不加地区限制的车辆-->
+    <sql id="getGuessRecommdByBrandModelWithoutCity">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel,carType
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel and t0.carType=tt.carType
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             and tt.carType is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t0.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相品牌 车系 车辆并且出价次数小于10,不加地区限制的车辆-->
+    <sql id="getGuessRecommdByModelWithoutCity">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select  carBrand,carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and  t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             and tt.carModel is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同车系 车辆并且出价次数小于10,不加地区限制的车辆-->
+    <sql id="getGuessRecommdBySeriesWithoutCity">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carModel is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t1.status=502
+             and t0.flag=1
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌 车辆并且出价次数小于10,不加地区限制的车辆 t0.bidNum<10 and -->
+    <sql id="getGuessRecommdByBrandWithoutCity">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t0.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌 车辆并且出价次数小于10,不加地区限制的车辆-->
+    <sql id="getRecommdByBrandWithoutCity">
+        <![CDATA[
+        select
+            t0.id,t0.carBrand,t0.carModel,t0.carType,t0.carCity
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where tt.carBrand is not null
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+             </#if>
+             and t0.flag=1
+             and t1.status=502
+             and t1.auctionType=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 相同价位的车辆,并且与商户所在城市的车辆-->
+    <sql id="getGuessRecommdByBuyerCityBidprice">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.bidprice>
+               and  t0.priceMin> #{params.bidprice}
+         </#if>
+         <#if params.auctioncarid>
+             and t0.id not in (#{params.auctioncarid})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         <#if params.cityid>
+             and t0.carCity =#{params.cityid}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         order by t0.priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 相同价位的车辆,并且与商户所在省的车辆-->
+    <sql id="getGuessRecommdByBidprice">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.bidprice>
+             and  t0.priceMin> #{params.bidprice}
+         </#if>
+         <#if params.auctioncarid>
+             and t0.id not in (#{params.auctioncarid})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         <#if params.citylist>
+             and t0.carCity in (#{params.citylist})
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         order by t0.priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 相同价位的车辆,不加城市限制的车辆-->
+    <sql id="getGuessRecommdByBidpriceWithoutCity">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.bidprice>
+              and t0.priceMin> #{params.bidprice}
+         </#if>
+         <#if params.auctioncarid>
+             and t0.id not in (#{params.auctioncarid})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         order by t0.priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+
+
+    <!--获取 相同价位的车辆,不加城市限制的车辆-->
+    <sql id="getGuessRecommdByBidpriceWithoutCityWithBrandModelType">
+        <![CDATA[
+         select
+         t0.id,t0.carBrand,t0.carModel,t0.carType,t0.carCity
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.bidprice>
+              and t0.priceMin> #{params.bidprice}
+         </#if>
+         <#if params.auctioncarid>
+             and t0.id not in (#{params.auctioncarid})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         order by t0.priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 商户已经出价过的并且还是竞拍中的车辆-->
+    <sql id="getBuyerBiddingCarInfo">
+        <![CDATA[
+         select
+         t0.auctionCarId
+         from aucs.ams_bidprice t0
+         left join aucs.ams_car t1 on t0.auctionCarId=t1.id
+         left join aucs.ams_screen t2 on t1.screenId=t2.id
+         <#if params.buyerId>
+                where buyerId = #{params.buyerId}
+         </#if>
+         and t2.status=502
+         and t2.auctionType=1
+         and t2.auctionScreendType<>4
+        ]]>
+    </sql>
+
+    <!--根据竞拍车辆id,获取该车的估价均值-->
+    <sql id="getAuctioncarElvaPrice">
+        <![CDATA[
+         select
+         priceMin,
+         priceMax
+         from aucs.ams_car
+         <#if params.auctioncarid>
+                where id = #{params.auctioncarid}
+         </#if>
+        ]]>
+    </sql>
+
+
+    <!--获取 当天默认竞拍车辆id 列表-->
+    <sql id="getDefaultCarInfo">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.currentDate>
+               and t0.overTime> #{params.currentDate}
+               and t1.startTime<#{params.currentDate}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         <#if params.limit>
+            limit #{params.limit}
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 车主降价车辆 列表-->
+    <sql id="getReductionCarInfo">
+        <![CDATA[
+         select
+         auctionCarId as id
+         from aucs.ams_cutprice_car_log
+         where delFlag=0
+        ]]>
+    </sql>
+
+    <!--获取 当天默认竞拍车辆id，带检测单id 列表-->
+    <sql id="getDefaultCarInfoWithDetect">
+        <![CDATA[
+         select
+         t0.id,
+         t0.detectionId
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.currentDate>
+               and t0.overTime> #{params.currentDate}
+               and t1.startTime<#{params.currentDate}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         <#if params.limit>
+            limit #{params.limit}
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 当天默认竞拍车辆的车辆id列表-->
+    <sql id="getCaridofAuctioncar">
+        <![CDATA[
+         select
+         t0.carid
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.currentDate>
+               and t0.overTime> #{params.currentDate}
+               and t1.startTime<#{params.currentDate}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         <#if params.limit>
+            limit #{params.limit}
+         </#if>
+        ]]>
+    </sql>
+
+    <!--获取 当天默认竞拍车辆id 列表-->
+    <sql id="getBidFinishDefaultCarInfo">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.currentDate>
+                and t0.overTime> #{params.currentDate}
+                and t1.startTime<#{params.currentDate}
+         </#if>
+         <#if params.minPrice>
+                and (t0.priceMin+t0.priceMax)/2 >= #{params.minPrice}
+         </#if>
+         and t0.flag=1
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         <#if params.limit>
+            limit #{params.limit}
+         </#if>
+        ]]>
+    </sql>
+
+
+    <!--获取 有与商户出价车辆相同品牌、车系车辆并且出价次数小于10-->
+    <sql id="getGuessRecommdByBrandModelList">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel
+            left join aucs.ams_screen t1 on t0.screenId=t1.id
+            where t1.status=502
+             <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+             </#if>
+             and t1.auctionType=1
+             and t0.flag=1
+             and t1.auctionScreendType<>4
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 竞拍车辆的品牌、车型和车系-->
+    <sql id="getBiddingCarModelType">
+        <![CDATA[
+         select carBrand,carModel,carType
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+        ]]>
+    </sql>
+
+    <!--个性化推荐 获取车商近出价记录-->
+    <sql id="getBuyerBidNum">
+        <![CDATA[
+          select count(1) as allBidNum
+            from aucs.ams_bidprice
+            <#if params.buyer_id>
+             where buyerId=#{params.buyer_id}
+            </#if>
+        ]]>
+    </sql>
+
+    <!--个性化推荐 获取车商中标记录-->
+    <sql id="getBuyerWinNum">
+        <![CDATA[
+         select count(1) as allWinNum
+            from aucs.ams_win
+            <#if params.buyer_id>
+             where buyerId=#{params.buyer_id}
+            </#if>
+        ]]>
+    </sql>
+
+
+    <!--获取 无与商户出价车辆相同品牌、车系车辆并且出价次数小于10，取相同价位的车辆-->
+    <sql id="getGuessRecommdByBidpriceList">
+        <![CDATA[
+         select
+         id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         <#if params.bidprice>
+                where t0.priceMin> #{params.bidprice}-5000
+         </#if>
+         <#if params.hasBidCars>
+             and t0.id not in (#{params.hasBidCars})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t1.status=502
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         and t0.flag=1
+         order by t0.priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+
+
+    <!--获取 与车商所在地区 车况较好的车辆-->
+    <sql id="getbetterCarCondition">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.region_list>
+             and t0.carCity  in (#{params.region_list})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.carrating in ('一级','二级')
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         and t0.flag=1
+        ]]>
+    </sql>
+
+    <!--获取 与车商所在地区 车况较好的车辆，获取竞拍车辆id,检测单id-->
+    <sql id="getbetterCarConditionWithDetectId">
+        <![CDATA[
+         select
+         t0.id,
+         t0.detectionId
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.region_list>
+             and t0.carCity  in (#{params.region_list})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.carrating in ('一级','二级')
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         and t0.flag=1
+        ]]>
+    </sql>
+
+    <!--获取 与车商所在地区 出价次数小于5次的车辆-->
+    <sql id="getbidNumLessFive">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.region_list>
+             and t0.carCity  in (#{params.region_list})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.bidNum<5
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         and t0.flag=1
+        ]]>
+    </sql>
+
+    <!--获取 与车商所在地区 出价次数小于5次的车辆-->
+    <sql id="getbidNumLessFiveWithDetectId">
+        <![CDATA[
+         select
+         t0.id,
+         t0.detectionId
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         where t1.status=502
+         <#if params.region_list>
+             and t0.carCity  in (#{params.region_list})
+         </#if>
+         <#if params.now>
+                and t0.overTime>#{params.now}
+                and t1.startTime<#{params.now}
+         </#if>
+         and t0.bidNum<5
+         and t1.auctionType=1
+         and t1.auctionScreendType<>4
+         and t0.flag=1
+        ]]>
+    </sql>
+
+
+    <!--获取  收车场次中-进入竞拍倒计时的车辆-->
+    <sql id="auctionCountdownCar">
+        <![CDATA[
+         select
+         t0.id
+         from aucs.ams_car t0
+         left join aucs.ams_screen t1 on t0.screenId=t1.id
+         left join aucs.ams_order t2 on t2.orderId=t0.orderid
+         where t2.status=502
+          and t0.flag=1
+          and t1.auctionType=1
+          and t1.auctionScreendType=4
+          and t0.overtime>now()
+        ]]>
+    </sql>
+</sqlMap>

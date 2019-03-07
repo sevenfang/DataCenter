@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="saveDs">
+        <![CDATA[
+        INSERT INTO `bigdata`.`t_whtc_db_config` (
+        	`name`,
+        	`url`,
+        	`type`,
+        	`username`,
+        	`password`,
+        	`createdTime`,
+        	`updatedTime`
+        )
+        VALUES
+        	(
+        		#{params.name},
+        		#{params.url},
+        		#{params.type},
+        		#{params.username},
+        		#{params.password},
+        		#{params.createdTime},
+        		#{params.updatedTime}
+        	);
+            ]]>
+    </sql>
+    <!--查询任务信息-->
+    <sql id="getDs">
+        <![CDATA[
+        SELECT
+            `id`,
+	        `name`,
+	        `url`,
+	        `type`,
+	        `username`,
+	        `password`,
+	        `createdTime`,
+	        `updatedTime`
+         FROM `bigdata`.`t_whtc_db_config`
+         where 1=1
+         <#if params.id >
+         and  id = #{params.id}
+         </#if>
+         <#if params.type >
+         and  type = #{params.type}
+         </#if>
+         <#if params.name >
+         and  name = #{params.name}
+         </#if>
+         <#if params.column && params.value >
+         and  ${params.column} like #{params.value}
+         </#if>
+         <#if params.page && params.size>
+         limit ${(params.page-1)*params.size},${params.size}
+         </#if>
+        ]]>
+    </sql>
+    <!--获取任务信息总数-->
+    <sql id="count">
+        <![CDATA[
+        SELECT COUNT(id) as count FROM `bigdata`.`t_whtc_db_config` where 1 = 1
+        <#if params.column && params.value >
+         and  ${params.column} like #{params.value}
+         </#if>
+        ]]>
+    </sql>
+    <sql id="delDs">
+        <![CDATA[
+        DELETE FROM `bigdata`.`t_whtc_db_config`
+        WHERE 1=1
+        <#if params.id>
+           and id= #{params.id}
+        </#if>
+        <#if params.name>
+            and name= #{params.name}
+        </#if>
+        ]]>
+    </sql>
+
+    <sql id="updateDs">
+        <![CDATA[
+        UPDATE `bigdata`.`t_whtc_db_config`
+        SET id= #{params.id}
+        <#if params.url>
+           , url= #{params.url}
+        </#if>
+        <#if params.name>
+           , name= #{params.name}
+        </#if>
+        <#if params.username>
+           , username= #{params.username}
+        </#if>
+        <#if params.password>
+           , password= #{params.password}
+        </#if>
+        <#if params.type>
+           , type= #{params.type}
+        </#if>
+        <#if params.updatedTime>
+           , updatedTime= #{params.updatedTime}
+        </#if>
+        WHERE 1 = 1
+        <#if params.id>
+           and id= #{params.id}
+        </#if>
+        ]]>
+    </sql>
+</sqlMap>

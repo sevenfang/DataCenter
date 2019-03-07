@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--查询门店异常车辆-->
+    <sql id="getCarIdsOfAbnormalStore">
+        <![CDATA[
+            SELECT
+            	CONCAT(storeid, '-', tagid) `key`,
+            	carid
+            FROM
+            	kn1_ret_store_unusual_status_remind
+            WHERE
+            	CONCAT(storeid, '-', tagid) in (#{params.keys})
+            	and static_date=DATE_FORMAT(Now(),'%Y-%m-%d');
+        ]]>
+    </sql>
+</sqlMap>

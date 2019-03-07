@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取制定车系、等级、场次的竞拍车辆id-->
+    <sql id="getGuessCars">
+        <![CDATA[
+        select id from dw_v2.aucs_ams_car where status<>0
+        <#if params.carRatings>
+           and carRating in (#{params.carRatings})
+        </#if>
+        <#if params.carModels>
+           and carModel in (#{params.carModels})
+        </#if>
+        <#if (params.carSessions)>
+           and screenId in (#{params.carSessions})
+        </#if>
+        <#if params.start>
+                and overTime> #{params.start}
+           </#if>
+        <#if params.end>
+                and overTime< #{params.end}
+        </#if>
+        ]]>
+    </sql>
+
+    <!--获取 有与商户出价车辆相同品牌、车系车辆并且出价次数小于10-->
+    <sql id="getGuessRecommdByBrandModel">
+        <![CDATA[
+        select
+            t0.id
+            from aucs.ams_car t0
+            left join
+            (
+            select carBrand,carModel
+            from aucs.ams_car
+            <#if params.auctioncarid>
+             where id=#{params.auctioncarid}
+            </#if>
+             )
+            tt on t0.carBrand=tt.carBrand and t0.carModel=tt.carModel
+            <#if params.auctioncarid>
+               and t0.id not in (#{params.auctioncarid})
+            </#if>
+            where t0.bidNum<10
+             <#if params.now>
+                and t0.overTime>#{params.now}
+             </#if>
+             <#if params.count>
+                limit #{params.count};
+             </#if>
+        ]]>
+    </sql>
+
+    <!--获取 无与商户出价车辆相同品牌、车系车辆并且出价次数小于10，取相同价位的车辆-->
+    <sql id="getGuessRecommdByBidprice">
+        <![CDATA[
+         select
+         id
+         from aucs.ams_car
+         <#if params.bidprice>
+                where priceMin> #{params.bidprice}-5000
+         </#if>
+         <#if params.auctioncarid>
+             and id not in (#{params.auctioncarid})
+         </#if>
+         <#if params.now>
+                and overTime>#{params.now}
+         </#if>
+         order by priceMin
+         <#if params.count>
+                limit #{params.count};
+         </#if>
+        ]]>
+    </sql>
+</sqlMap>

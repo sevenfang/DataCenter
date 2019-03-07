@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="save">
+        <![CDATA[
+        INSERT INTO `bigdata`.`t_whtc_datax` (
+	                    `jobName`,
+	                    `jobDesc`,
+	                    `data`,
+	                    `createdTime`,
+	                    `updatedTime`
+                           )
+                        VALUES
+	                    (
+		                #{params.jobName},
+		                #{params.jobDesc},
+		                #{params.data},
+		                #{params.createdTime},
+		                #{params.updatedTime}
+	                    );
+            ]]>
+    </sql>
+    <!--查询任务信息-->
+    <sql id="select">
+        <![CDATA[
+        SELECT
+            `id`,
+            `jobName`,
+            `jobDesc`,
+            `status`,
+            `data`,
+            DATE_FORMAT(`createdTime`,'%Y-%m-%d %T') as `createdTime`,
+            DATE_FORMAT(`updatedTime`,'%Y-%m-%d %T') as `updatedTime`
+         FROM `bigdata`.`t_whtc_datax`
+         where 1=1
+         <#if params.id >
+         and  id = #{params.id}
+         </#if>
+         <#if params.jobName >
+         and  jobName = #{params.jobName}
+         </#if>
+         <#if params.column && params.value >
+         and  ${params.column} like #{params.value}
+         </#if>
+         <#if params.page && params.size>
+         limit ${(params.page-1)*params.size},${params.size}
+         </#if>
+        ]]>
+    </sql>
+    <!--获取任务信息总数-->
+    <sql id="count">
+        <![CDATA[
+        SELECT COUNT(id) as count FROM `bigdata`.`t_whtc_datax` where 1 = 1
+        <#if params.column && params.value >
+         and  ${params.column} like #{params.value}
+         </#if>
+        ]]>
+    </sql>
+    <sql id="delete">
+        <![CDATA[
+        DELETE FROM `bigdata`.`t_whtc_datax`
+        WHERE 1=1
+        <#if params.id>
+           and id= #{params.id}
+        </#if>
+        <#if params.jobName>
+            and jobName= #{params.jobName}
+        </#if>
+        ]]>
+    </sql>
+
+    <sql id="update">
+        <![CDATA[
+        UPDATE `bigdata`.`t_whtc_datax`
+        SET id= #{params.id}
+        <#if params.status>
+           , status= #{params.status}
+        </#if>
+        <#if params.jobName>
+           , jobName= #{params.jobName}
+        </#if>
+        <#if params.jobDesc>
+           , jobDesc= #{params.jobDesc}
+        </#if>
+        <#if params.data>
+           , data= #{params.data}
+        </#if>
+        <#if params.updatedTime>
+           , updatedTime= #{params.updatedTime}
+        </#if>
+        WHERE 1 = 1
+        <#if params.id>
+           and id= #{params.id}
+        </#if>
+        ]]>
+    </sql>
+</sqlMap>

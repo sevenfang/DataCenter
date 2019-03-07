@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+
+    <sql id="save">
+        <![CDATA[
+        INSERT INTO `test`.`t_whtc_datax` (
+	                    `jobName`,
+	                    `jobDesc`,
+	                    `data`,
+	                    `createdTime`,
+	                    `updatedTime`
+                           )
+                        VALUES
+	                    (
+		                #{params.jobName},
+		                #{params.jobDesc},
+		                #{params.data},
+		                #{params.createdTime},
+		                #{params.updatedTime}
+	                    );
+            ]]>
+    </sql>
+
+</sqlMap>

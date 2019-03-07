@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--存储任信息-->
+    <sql id="getDbTableInfo">
+        <![CDATA[
+        SELECT
+	    	d.DB_ID as dbId,
+	    	d.`NAME` as name,
+	    	t.TBL_ID as tableId,
+	    	t.TBL_NAME as tableName
+	    FROM
+        	DBS d
+        RIGHT JOIN TBLS t ON d.DB_ID = t.DB_ID
+            ]]>
+    </sql>
+    <!--查询任务信息-->
+    <sql id="getCols">
+        <![CDATA[
+        SELECT
+        	*
+        FROM
+        COLUMNS_V2 c
+				LEFT JOIN SDS s ON s.CD_ID = c.CD_ID
+				LEFT JOIN TBLS t ON t.SD_ID = s.SD_ID
+
+        WHERE 1=1
+        <#if params.tableId>
+        and t.TBL_ID=#{params.tableId}
+        </#if>
+        ORDER BY INTEGER_IDX
+        ]]>
+    </sql>
+
+    <!--查询所有数据库-->
+    <sql id="getDbs">
+        <![CDATA[
+        SELECT * from DBS
+        ]]>
+    </sql>
+
+    <!--查询所有数据库-->
+    <sql id="getTables">
+        <![CDATA[
+            SELECT
+            	*
+            FROM
+            	TBLS t
+            WHERE 1=1
+            <#if params.dbId>
+                AND	t.DB_ID = #{params.dbId}
+            </#if>
+        ]]>
+    </sql>
+    <!--查询所有数据库与表-->
+    <sql id="getDBSchema">
+        <![CDATA[
+            SELECT
+            	d.DB_ID,
+            	d. NAME,
+            	t.TBL_ID,
+            	t.TBL_NAME
+            FROM
+            	DBS d
+            RIGHT JOIN TBLS t ON d.DB_ID = t.DB_ID
+        ]]>
+    </sql>
+
+    <!--获取去除换行符和回车符的sql-->
+    <sql id="getSqlWithoutChar10AndChar13">
+    <![CDATA[
+        SELECT
+        	concat(
+        		'select ',
+        		group_concat(
+        			CASE
+        			WHEN type_name = 'string' THEN
+        				concat(
+        					'REPLACE(REPLACE(',
+        					COLUMN_NAME,
+        					',CHAR(10), ''''), CHAR(13), '''') as ',
+        					COLUMN_NAME
+        				)
+        			ELSE
+        				COLUMN_NAME
+        			END
+        			ORDER BY
+        				INTEGER_IDX
+        		),
+        		' from ',
+        		tbl_name
+        	) AS query_sql
+            FROM
+        	TBLS t
+            LEFT JOIN SDS t2 ON t.SD_ID = t2.SD_ID
+            LEFT JOIN COLUMNS_V2 c ON t2.CD_ID = c.CD_ID
+            WHERE
+        	t.TBL_ID = #{params.tblId}
+    ]]>
+    </sql>
+</sqlMap>

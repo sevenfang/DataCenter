@@ -1,0 +1,2 @@
+braveConsumerFilter=com.chezhibao.bigdata.zipkin.dubbo.dubbo.BraveConsumerFilter
+braveProviderFilter=com.chezhibao.bigdata.zipkin.dubbo.dubbo.BraveProviderFilter

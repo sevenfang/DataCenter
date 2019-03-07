@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取渠道需要开拓的信息-->
+    <sql id="getexploreCarBystaffId">
+        <![CDATA[
+        select carBrand,carRating,priceArea from dw_new.channel_staff_explore_car
+        <#if params.staffId>
+           where staffId =#{params.staffId}
+        </#if>
+       ]]>
+    </sql>
+</sqlMap>

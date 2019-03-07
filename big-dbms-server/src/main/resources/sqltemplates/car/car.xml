@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取制定车系、等级、场次的竞拍车辆id-->
+    <sql id="getCarsByRMS">
+        <![CDATA[
+        select distinct(id) from realreport.aucs_ams_car where status<>0
+        <#if params.carRatings>
+           and carRating in (#{params.carRatings})
+        </#if>
+        <#if params.carModels>
+           and carModel in (#{params.carModels})
+        </#if>
+        <#if (params.carSessions)>
+           and screenId in (#{params.carSessions})
+        </#if>
+        <#if params.start>
+                and overTime> #{params.start}
+           </#if>
+        <#if params.end>
+                and overTime< #{params.end}
+        </#if>
+        ]]>
+    </sql>
+</sqlMap>

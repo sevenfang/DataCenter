@@ -1,0 +1,13 @@
+{
+  "appName": "whtc",
+  "to1": {
+    "nacosServer": {
+      "serverAddr": "188.188.22.163:8848"
+    }
+  },
+  "prod": {
+    "nacosServer": {
+      "serverAddr": "10.100.16.75:8848"
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--查询当前优良出价次数-->
+    <sql id="getExcellentCount">
+        <![CDATA[
+            SELECT
+            	auctionCarId,
+            	sum(excellent_flag) counts
+            FROM
+            	dw_new.`realreport_auction_car_avg`
+            WHERE
+            	auctionCarId IN (#{params.auctionCarIds})
+            	AND sessionOverTime > DATE_FORMAT(NOW(),'%Y-%m-%d')
+            GROUP BY
+            	auctionCarId;
+        ]]>
+    </sql>
+    <!--查询车辆最近一次竞拍结束到待约成交之间接通次数与时长-->
+    <sql id="getLatestCarFollowUpInfos">
+        <![CDATA[
+            SELECT
+            	carid,
+            	calltimes,
+            	callduration
+            FROM
+            	dw_new.`car_tracking_duration`
+            WHERE
+            	carid IN (#{params.carIds});
+        ]]>
+    </sql>
+</sqlMap>

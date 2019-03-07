@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取制定车系、等级、场次的竞拍车辆id-->
+    <sql id="getTableSchema">
+        <![CDATA[
+        SELECT
+        	TABLE_SCHEMA `schema`,
+        	TABLE_NAME `name`
+        FROM
+        	INFORMATION_SCHEMA. TABLES
+        WHERE
+        	TABLE_TYPE = 'BASE TABLE'
+        AND TABLE_SCHEMA != 'sys'
+        <#if params.schemas>
+            and TABLE_SCHEMA in (#{params.schemas})
+        </#if>
+        <#if params.tables>
+            and TABLE_NAME in (#{params.tables})
+        </#if>
+        ;
+        ]]>
+    </sql>
+    <sql id="getViewSchema">
+        <![CDATA[
+        SELECT
+        	TABLE_SCHEMA `schema`,
+        	TABLE_NAME `name`
+        FROM
+        	INFORMATION_SCHEMA.views
+        WHERE
+        	TABLE_SCHEMA != 'sys'
+        	<#if params.schemas>
+                and TABLE_SCHEMA in (#{params.schemas})
+            </#if>
+            <#if params.views>
+                and TABLE_NAME in (#{params.views})
+            </#if>
+        	;
+        ]]>
+    </sql>
+    <sql id="getDatabaseSchemaHint">
+        <![CDATA[
+            SELECT
+            	table_schema `schema`,
+            	table_name `table`,
+            	column_name `column`,
+            	column_comment `desc`
+            FROM
+            	information_schema. COLUMNS
+            WHERE
+            	table_schema NOT IN (
+            		'information_schema',
+            		'sys',
+            		'performance_schema'
+            	)
+            <#if params.schemas>
+                and table_schema in (#{params.schemas})
+            </#if>
+            <#if params.tables>
+                and table_name in (#{params.tables})
+            </#if>
+        ]]>
+    </sql>
+    <sql id="getHiveDbSchema">
+        <![CDATA[
+           SELECT
+            	d. NAME `schema`,
+            	CONCAT(
+            		t.TBL_NAME,
+            		'|-|',
+            		ifnull(tp.PARAM_VALUE, '无注释')
+            	) `name`
+            FROM
+            	hive.DBS d
+            RIGHT JOIN hive.TBLS t ON d.DB_ID = t.DB_ID
+            LEFT JOIN hive.table_params tp ON t.TBL_ID = tp.TBL_ID
+            AND tp.PARAM_KEY = 'comment'
+            WHERE 1 = 1
+            <#if params.schemas>
+                and d. NAME in (#{params.schemas})
+            </#if>
+            <#if params.tables>
+                and t.TBL_NAME in (#{params.tables})
+            </#if>
+            <#if params.forbid>
+                and t.TBL_NAME not like #{params.forbid}
+            </#if>
+        ]]>
+    </sql>
+    <!--hive数据库 的表和字段信息-->
+    <sql id="getHiveDbColumnsSchema">
+        <![CDATA[
+           SELECT
+            d. NAME `schema`,
+		    t.TBL_NAME `table`,
+        	c.Column_name `column`,
+        	c.comment `desc`
+        FROM
+        hive.COLUMNS_V2 c
+				LEFT JOIN hive.SDS s ON s.CD_ID = c.CD_ID
+				LEFT JOIN hive.TBLS t ON t.SD_ID = s.SD_ID
+				LEFT JOIN hive.DBS d ON d.DB_ID = t.DB_ID
+        where 1=1
+            <#if params.schemas>
+                and d. NAME in (#{params.schemas})
+            <#else>
+                and d. NAME in ('dw','da','ods')
+            </#if>
+            <#if params.tables>
+                and t.TBL_NAME in (#{params.tables})
+            </#if>
+            <#if params.forbid>
+                and t.TBL_NAME not like #{params.forbid}
+            </#if>
+        ORDER BY INTEGER_IDX
+        ]]>
+    </sql>
+</sqlMap>

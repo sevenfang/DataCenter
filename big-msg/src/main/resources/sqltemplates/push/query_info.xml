@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+
+    <sql id="query_channel_client_info">
+        <![CDATA[
+        select
+		  id,
+		  userId,
+		  userName,
+		  appId,
+		  deviceId,
+		  versionAppId,
+		  version,
+		  client,
+		  flag,
+		  registerTime,
+		  cutime
+		from t_buyer_channel_appdevice
+		  where buyerId = #{params.channelId}
+		  order by id desc limit 1
+            ]]>
+    </sql>
+    <sql id="query_buyer_client_info">
+        <![CDATA[
+        select
+		  id,
+		  buyerId,
+		  lastClient,
+		  lastToken,
+		  lastLoginTime,
+		  nowClient,
+		  nowToken,
+		  nowLoginTime
+		from t_buyer_client
+		  where buyerId = #{params.buyerId}
+		  order by id desc limit 1
+            ]]>
+    </sql>
+
+    <sql id="query_buyer_client_infos">
+        <![CDATA[
+        select
+		  id,
+		  buyerId,
+		  lastClient,
+		  lastToken,
+		  lastLoginTime,
+		  nowClient,
+		  nowToken,
+		  nowLoginTime
+		from t_buyer_client
+		  where buyerId in (#{params.buyerIds})
+            ]]>
+    </sql>
+    <sql id="query_channel_client_infos">
+        <![CDATA[
+        select
+		  id,
+		  userId,
+		  userName,
+		  appId,
+		  deviceId,
+		  versionAppId,
+		  version,
+		  client,
+		  flag,
+		  registerTime,
+		  cutime
+		from t_buyer_channel_appdevice
+		  where userId in (#{params.userIds})
+            ]]>
+    </sql>
+
+
+
+</sqlMap>

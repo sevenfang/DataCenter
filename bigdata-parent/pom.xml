@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.chezhibao</groupId>
+    <artifactId>big-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>common</module>
+        <module>sqltemplate</module>
+        <module>cache</module>
+        <module>config-client</module>
+        <module>big-auth</module>
+        <module>sjb-framework-starter</module>
+        <module>big-zipkin-dubbo-starter</module>
+        <module>big-examples</module>
+        <module>big-cache-starter</module>
+        <module>big-gateway</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>big-parent</name>
+    <description>big-realreport</description>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.1.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+</parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <mybatis-boot-version>1.3.2</mybatis-boot-version>
+        <dbcp-version>2.2.0</dbcp-version>
+        <mysql-version>5.1.46</mysql-version>
+        <dom4j-version>1.6.1</dom4j-version>
+        <beanutils-version>1.9.3</beanutils-version>
+        <commonsio-version>2.6</commonsio-version>
+        <fastjson-version>1.2.32</fastjson-version>
+        <msg-version>1.02.01-SNAPSHOT</msg-version>
+        <http-version>4.3</http-version>
+        <lang3-version>3.7</lang3-version>
+        <guava-version>25.0-jre</guava-version>
+        <dubbo-version>2.6.1</dubbo-version>
+        <dubbo-starter-version>2.0.0</dubbo-starter-version>
+        <csf-version>1.1.0-SNAPSHOT</csf-version>
+        <zkclient-version>0.10</zkclient-version>
+        <swagger2-version>2.8.0</swagger2-version>
+        <swagger-ui-version>3.14.2</swagger-ui-version>
+        <curator-version>2.12.0</curator-version>
+        <spring-cloud.version>Finchley.RC2</spring-cloud.version>
+        <uuid-version>3.1.5</uuid-version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.uuid</groupId>
+                <artifactId>java-uuid-generator</artifactId>
+                <version>${uuid-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.casbin</groupId>
+                <artifactId>jcasbin</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+            <!--********************************RESTAPI管理swagger2 start********************************-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo-version}</version>
+            </dependency>
+            <!--================================RESTAPI管理swagger2 end================================-->
+
+            <!--********************************消息系统依赖 start********************************-->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${http-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${lang3-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lebo.chezhibao</groupId>
+                <artifactId>msg-intf</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+                <version>${msg-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lebo.chezhibao</groupId>
+                <artifactId>authcall</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+                <version>${msg-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lebo.chezhibao</groupId>
+                <artifactId>msg-appSDK</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+                <version>${msg-version}</version>
+            </dependency>
+            <!--================================消息系统依赖 end================================-->
+
+            <!--********************************mybatis依赖 start********************************-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-boot-version}</version>
+            </dependency>
+            <!--mybatis依赖 end-->
+
+            <!--mysql依赖 start-->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>${dbcp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-version}</version>
+            </dependency>
+            <!--================================mysql依赖 end================================-->
+
+            <!--********************************dubbo依赖 start********************************-->
+            <dependency>
+                <groupId>com.alibaba.spring.boot</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo-starter-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.alibaba</groupId>
+                        <artifactId>dubbo</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.chezhibao.csf</groupId>
+                <artifactId>csf</artifactId>
+                <version>${csf-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.alibaba</groupId>
+                        <artifactId>dubbo</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-framework -->
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator-version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-client -->
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-client</artifactId>
+                <version>${curator-version}</version>
+            </dependency>
+
+
+            <!-- 注意要与dobbo中的zk版本一致 -->
+            <dependency>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient-version}</version>
+            </dependency>
+
+            <!--================================dubbo依赖 end================================-->
+
+            <!--********************************Others依赖 start********************************-->
+            <dependency>
+                <groupId>dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${beanutils-version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commonsio-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava-version}</version>
+            </dependency>
+            <!--================================Others依赖 end================================-->
+        </dependencies>
+    </dependencyManagement>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <skipTests>true</skipTests>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>1.8</source>
+                <target>1.8</target>
+                <encoding>UTF-8</encoding>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+    <distributionManagement>
+        <repository>
+            <id>sjb</id>
+            <name>Nexus Release Repository</name>
+            <url>http://188.188.22.163:12122/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </distributionManagement>
+</project>

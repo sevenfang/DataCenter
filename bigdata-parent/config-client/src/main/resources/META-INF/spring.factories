@@ -1,0 +1,4 @@
+org.springframework.context.ApplicationListener=\
+  com.chezhibao.bigdata.config.client.listener.BigdataConfigImportListener,\
+  com.chezhibao.bigdata.config.client.listener.WriteServerRuntimeInfoFileListener,\
+  com.chezhibao.bigdata.config.client.listener.SentinelRulerListener

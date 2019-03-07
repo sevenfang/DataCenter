@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+    <!--获取城市名称-->
+    <sql id="getCityNameByOrgIds">
+        <![CDATA[
+            SELECT Replace(`name`,'组','市') cityName from `realreport`.`basic_sys_org` where `id`in (#{params.orgIds});
+         ]]>
+    </sql>
+    <!--获取城市Id-->
+    <sql id="getCityIdByOrgIds">
+        <![CDATA[
+            SELECT DISTINCT(ou) cityId from `realreport`.`basic_sys_org` where `id`in (#{params.orgIds}) and ou is not null and ou > 0;
+         ]]>
+    </sql>
+    <!--获取用户管辖的城市Id-->
+    <sql id="getManageCityIdByUserId">
+        <![CDATA[
+           SELECT DISTINCT(ou) cityId from basic_sys_org where idPath regexp #{params.regIdPaths} and ou >0;
+         ]]>
+    </sql>
+    <!--获取用户管辖的城市Id-->
+    <sql id="getManageOrgIdByUserId">
+        <![CDATA[
+            SELECT DISTINCT(id) orgId from basic_sys_org where idPath regexp #{params.regIdPaths};
+         ]]>
+    </sql>
+</sqlMap>

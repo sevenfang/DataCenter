@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+
+    <sql id="save">
+        <![CDATA[
+        INSERT INTO `realreport`.`t_appraiser_price` (
+        	`ocseId`,
+        	`carId`,
+        	`appraiserId`,
+        	`price`,
+        	`accessUrl`,
+        	`createdTime`,
+        	`comment`,
+        	`detectId`
+        )
+        VALUES
+        	(
+        		#{params.ocseId},
+        		#{params.carId},
+        		#{params.appraiserId},
+        		#{params.price},
+        		#{params.accessUrl},
+        		#{params.createdTime},
+        		#{params.comment},
+        		#{params.detectId}
+        	);
+        ]]>
+    </sql>
+    <sql id="get">
+        <![CDATA[
+        SELECT
+        	*
+        FROM
+            `realreport`.`t_appraiser_price`
+        WHERE 1=1
+        <#if params.ocseId?exists>
+            and ocseId=#{params.ocseId}
+        </#if>
+        <#if params.carId?exists>
+            and carId=#{params.carId}
+        </#if>
+        <#if params.appraiserId?exists>
+            and appraiserId=#{params.appraiserId}
+        </#if>
+        <#if params.detectId?exists>
+            and detectId=#{params.detectId}
+        </#if>
+        ]]>
+    </sql>
+
+    <sql id="queryAppraiserByCity">
+        <![CDATA[
+        SELECT
+        	*
+        FROM
+        	`t_appraiser`
+        WHERE 1=1
+        and city=#{params.city}
+        ]]>
+    </sql>
+
+
+    <sql id="updateAppraiserPrice">
+        <![CDATA[
+        UPDATE `realreport`.`t_appraiser_price`
+        SET
+         `price` = #{params.price},
+         <#if params.comment>
+            `comment` = #{params.comment},
+         </#if>
+         `bidTime` = #{params.bidTime}
+        WHERE
+        	`ocseId` = #{params.ocseId}
+        	AND `carId` = #{params.carId}
+        	AND `appraiserId` = #{params.appraiserId}
+        	AND `detectId` = #{params.detectId};
+        ]]>
+    </sql>
+
+    <sql id="updateAppraiserStatus">
+        <![CDATA[
+        UPDATE `realreport`.`t_appraiser_price`
+        SET
+         `status` = #{params.status}
+        WHERE
+        	`ocseId` = #{params.ocseId}
+        	AND `carId` = #{params.carId}
+        	AND `appraiserId` = #{params.appraiserId}
+        	AND `detectId` = #{params.detectId};
+        ]]>
+    </sql>
+</sqlMap>

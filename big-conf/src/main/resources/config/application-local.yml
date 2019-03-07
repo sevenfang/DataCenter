@@ -1,0 +1,13 @@
+zk:
+  servers: 127.0.0.1:2181
+  max-total: 10
+  max-idle: 6
+  min-idle: 1
+  session-timeout: 30000
+  connection-timeout: 130000
+server:
+  port: 8087
+  servlet:
+    context-path: /
+logging:
+  config: classpath:config/logback-spring.xml

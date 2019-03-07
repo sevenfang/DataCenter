@@ -1,0 +1,92 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "password": "root",
+            "username": "roote",
+            "connection": [
+              {
+                "jdbcUrl": [
+                  "bad_ip:3306/database"
+                ],
+                "querySql": [
+                  "select db_id,on_line_flag from db_info where db_id < 10;"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "hdfswriter",
+          "parameter": {
+            "path": "/user/hive/warehouse/writerorc.db/orcfull",
+            "column": [
+              {
+                "name": "col1",
+                "type": "TINYINT"
+              },
+              {
+                "name": "col2",
+                "type": "SMALLINT"
+              },
+              {
+                "name": "col3",
+                "type": "INT"
+              },
+              {
+                "name": "col4",
+                "type": "BIGINT"
+              },
+              {
+                "name": "col5",
+                "type": "FLOAT"
+              },
+              {
+                "name": "col6",
+                "type": "DOUBLE"
+              },
+              {
+                "name": "col7",
+                "type": "STRING"
+              },
+              {
+                "name": "col8",
+                "type": "VARCHAR"
+              },
+              {
+                "name": "col9",
+                "type": "CHAR"
+              },
+              {
+                "name": "col10",
+                "type": "BOOLEAN"
+              },
+              {
+                "name": "col11",
+                "type": "date"
+              },
+              {
+                "name": "col12",
+                "type": "TIMESTAMP"
+              }
+            ],
+            "encoding": "utf-8",
+            "fileName": "xxxxe",
+            "fileType": "orc",
+            "defaultFS": "xxx:port",
+            "writeMode": "append",
+            "fieldDelimiter": "&nbsp"
+          }
+        }
+      }
+    ],
+    "setting": {
+      "speed": {
+        "channel": 1
+      }
+    }
+  }
+}

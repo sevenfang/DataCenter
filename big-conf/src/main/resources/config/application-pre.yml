@@ -1,0 +1,16 @@
+zk:
+  servers: 10.200.12.15:2181,110.200.12.16:2181,10.200.12.17:2181
+  max-total: 10
+  max-idle: 6
+  min-idle: 1
+  session-timeout: 30000
+  connection-timeout: 130000
+server:
+  port: 8084
+  servlet:
+    context-path: /
+logging:
+    level:
+        com.chezhibao: debug
+        org.springframework: debug
+    file: logs/logging.log

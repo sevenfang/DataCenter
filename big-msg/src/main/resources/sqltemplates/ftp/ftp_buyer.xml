@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<sqlMap>
+
+    <sql id="selectByUserId">
+        <![CDATA[
+            select id,name from `dw_new`.`basic_buyer` where id=#{params.id};
+        ]]>
+    </sql>
+
+    <sql id="selectByUserIds">
+        <![CDATA[
+            select id,name from `dw_new`.`basic_buyer` where id in (#{params.ids});
+        ]]>
+    </sql>
+
+    <sql id="selectByBuyerName">
+        <![CDATA[
+            select id,name from `dw_new`.`basic_buyer` where name=#{params.name};
+        ]]>
+    </sql>
+</sqlMap>
