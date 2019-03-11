@@ -1,8 +1,8 @@
 package com.chezhibao.bigdata.gateway.core.service.impl;
 
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.service.RedisApiServiceDelegate;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.service.ApiService;
 import com.chezhibao.bigdata.gateway.core.service.ApiServiceDelegate;
 import org.springframework.beans.factory.annotation.Autowired;

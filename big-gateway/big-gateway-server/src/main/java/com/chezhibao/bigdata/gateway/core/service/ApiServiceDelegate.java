@@ -2,13 +2,14 @@ package com.chezhibao.bigdata.gateway.core.service;
 
 import com.alibaba.fastjson.JSON;
 import com.chezhibao.bigdata.gateway.adapter.dubbo.DubboProxyService;
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.Api;
 import com.chezhibao.bigdata.gateway.core.ApiExecutor;
 import com.chezhibao.bigdata.gateway.core.factory.ApiFactory;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.exception.ApiException;
 import com.chezhibao.bigdata.gateway.pojo.DubboParam;
+import com.chezhibao.bigdata.gateway.utils.ApiKeyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -34,7 +35,7 @@ public class ApiServiceDelegate {
 
     public ApiInfo doGetApiInfo(ApiInfoBO apiInfoBO) {
         Map<String, Object> param = new HashMap<>();
-        String key = ApiExecutor.apiKeyGenerator.getKey(apiInfoBO);
+        String key = ApiKeyUtils.getKey(apiInfoBO);
         param.put("key", key);
         Object process = apiServer.process(param);
         if (StringUtils.isEmpty(process)) {
@@ -54,7 +55,7 @@ public class ApiServiceDelegate {
      * @return
      */
     private Api getSearchApiServer() {
-        String key = ApiExecutor.apiKeyGenerator.getKey(RedisApiServer.apiInfoBO);
+        String key = ApiKeyUtils.getKey(RedisApiServer.apiInfoBO);
         Api api = ApiExecutor.API_MAP.get(key);
         if(ObjectUtils.isEmpty(api)){
             api = apiFactory.getApi(RedisApiServer.redisGetServer);
@@ -81,7 +82,7 @@ public class ApiServiceDelegate {
             param.setName("key");
             param.setRequired(true);
             params.add(param);
-            dubboRequest.setDubboParams(params);
+            dubboRequest.setDubboParams(JSON.toJSONString(params));
 
             redisGetServer.setType("dubbo");
             redisGetServer.setTimeout(1000);

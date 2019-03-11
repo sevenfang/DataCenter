@@ -2,17 +2,10 @@ package com.chezhibao.bigdata.gateway;
 
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
-import com.alibaba.fastjson.JSON;
 import com.chezhibao.bigdata.gateway.adapter.dubbo.ApplicationService;
-import com.chezhibao.bigdata.gateway.adapter.dubbo.DubboProxyService;
 import com.chezhibao.bigdata.gateway.adapter.dubbo.RegistryServeice;
-import com.chezhibao.bigdata.gateway.core.ApiExecutor;
 import com.chezhibao.bigdata.gateway.core.GatewayChannelInitialHandler;
 import com.chezhibao.bigdata.gateway.core.config.GatewayConfig;
-import com.chezhibao.bigdata.gateway.core.factory.ApiFactory;
-import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
-import com.chezhibao.bigdata.gateway.util.SpringApplicationContextUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;

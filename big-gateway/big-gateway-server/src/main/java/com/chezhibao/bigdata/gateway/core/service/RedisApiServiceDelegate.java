@@ -1,10 +1,10 @@
 package com.chezhibao.bigdata.gateway.core.service;
 
 import com.alibaba.fastjson.JSON;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.exception.ApiException;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.pojo.utils.ApiKeyUtils;
+import com.chezhibao.bigdata.gateway.utils.ApiKeyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +32,12 @@ public class RedisApiServiceDelegate {
         String key = ApiKeyUtils.getKey(apiInfo);
         String s = redisTemplate.opsForValue().get(key);
         if(StringUtils.isEmpty(s)){
-            throw new ApiException(String.format("%s,%s,%s此API不存在",apiInfoBO.getUri(),apiInfoBO.getMethod(),apiInfoBO.getVersion()));
+            throw new ApiException(String.format("key:%s此API不存在",key));
         }
+        ApiInfo result = JSON.parseObject(s, ApiInfo.class);
         if(log.isDebugEnabled()){
-            log.debug("【网关服务|获取API】获取api：{}",apiInfo);
+            log.debug("【网关服务|获取API】获取api：{}",result);
         }
-        return JSON.parseObject(s, ApiInfo.class);
+        return result;
     }
 }

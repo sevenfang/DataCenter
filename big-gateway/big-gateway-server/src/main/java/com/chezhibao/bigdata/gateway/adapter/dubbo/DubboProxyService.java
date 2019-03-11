@@ -24,9 +24,12 @@ import com.alibaba.dubbo.config.RegistryConfig;
 import com.alibaba.dubbo.config.utils.ReferenceConfigCache;
 import com.alibaba.dubbo.rpc.service.GenericException;
 import com.alibaba.dubbo.rpc.service.GenericService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.chezhibao.bigdata.gateway.exception.ApiException;
 import com.chezhibao.bigdata.gateway.pojo.DubboParam;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -91,7 +94,11 @@ public class DubboProxyService {
     }
 
     private Pair<String[],Object[]> buildParameter(final DubboRequest dubboRequest) {
-        List<DubboParam> dubboParams = dubboRequest.getDubboParams();
+        String params = dubboRequest.getDubboParams();
+        List<DubboParam> dubboParams = new ArrayList<>(0);
+        if(!StringUtils.isEmpty(params)){
+            dubboParams = JSON.parseObject(params,new TypeReference<List<DubboParam>>(){});
+        }
 
         int len = dubboParams.size();
         if(len == 0){
@@ -174,7 +181,7 @@ public class DubboProxyService {
         /**
          * dubbo 请求参数
          */
-        private List<DubboParam> dubboParams;
+        private String dubboParams;
         /**
          * The constant CLASS_PARAMS.
          */

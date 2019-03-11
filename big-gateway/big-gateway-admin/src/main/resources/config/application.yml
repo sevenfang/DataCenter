@@ -4,9 +4,11 @@ logging:
   level:
     root: debug
 spring:
-  thymeleaf:
-    static-path-pattern: /**
-    cache: false
   redis:
     cluster:
       nodes: 188.188.22.166:6380,188.188.22.164:6380,188.188.22.166:6381,188.188.22.164:6379,188.188.22.165:6379,188.188.22.165:6380
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: aj7N)&)wlu>
+    url: jdbc:mysql://188.188.22.163:3306/gateway?useUnicode=true&characterEncoding=utf-8&useSSL=false

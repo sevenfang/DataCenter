@@ -1,7 +1,7 @@
 package com.chezhibao.bigdata.gateway.core.service;
 
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 
 /**
  * @author WangCongJun

@@ -8,6 +8,7 @@ import com.chezhibao.bigdata.gateway.auth.exception.LoginException;
 import com.chezhibao.bigdata.gateway.auth.service.AuthService;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -28,7 +29,7 @@ import java.util.Set;
  * Created by WangCongJun on 2018/12/13.
  */
 @Component
-@Scope("prototype")
+@ChannelHandler.Sharable
 @Slf4j
 public class GatewayHttpServer extends SimpleChannelInboundHandler<FullHttpRequest> {
 

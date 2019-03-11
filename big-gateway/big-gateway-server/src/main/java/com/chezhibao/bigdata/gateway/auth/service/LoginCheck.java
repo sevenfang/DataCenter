@@ -2,12 +2,13 @@ package com.chezhibao.bigdata.gateway.auth.service;
 
 import com.alibaba.fastjson.JSON;
 import com.chezhibao.bigdata.gateway.adapter.dubbo.DubboProxyService;
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.Api;
 import com.chezhibao.bigdata.gateway.core.ApiExecutor;
 import com.chezhibao.bigdata.gateway.core.factory.ApiFactory;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.pojo.DubboParam;
+import com.chezhibao.bigdata.gateway.utils.ApiKeyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -28,7 +29,7 @@ public class LoginCheck {
     private ApiFactory apiFactory;
 
     public Boolean isLogin(String userId){
-        String key = ApiExecutor.apiKeyGenerator.getKey(LoginApiServer.apiInfoBO);
+        String key = ApiKeyUtils.getKey(LoginApiServer.apiInfoBO);
         Api api = ApiExecutor.API_MAP.get(key);
         if(ObjectUtils.isEmpty(api)){
             api = apiFactory.getApi(LoginApiServer.loginGetServer);
@@ -58,7 +59,7 @@ public class LoginCheck {
             param.setName("id");
             param.setRequired(true);
             params.add(param);
-            dubboRequest.setDubboParams(params);
+            dubboRequest.setDubboParams(JSON.toJSONString(params));
 
             loginGetServer.setType("dubbo");
             loginGetServer.setTimeout(1000);

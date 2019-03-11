@@ -3,14 +3,14 @@ package com.chezhibao.bigdata.gateway.core;
 import com.chezhibao.bigdata.common.pojo.BigdataResult;
 import com.chezhibao.bigdata.gateway.core.factory.ApiFactory;
 import com.chezhibao.bigdata.gateway.pojo.ApiInfo;
-import com.chezhibao.bigdata.gateway.core.pojo.ApiInfoBO;
+import com.chezhibao.bigdata.gateway.bo.ApiInfoBO;
 import com.chezhibao.bigdata.gateway.core.service.ApiService;
 import com.chezhibao.bigdata.gateway.exception.ApiException;
+import com.chezhibao.bigdata.gateway.utils.ApiKeyUtils;
 import io.netty.handler.codec.http.FullHttpRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,24 +25,6 @@ public class ApiExecutor {
 
     public static ConcurrentHashMap<String, Api> API_MAP = new ConcurrentHashMap<>();
 
-    public static ApiKeyGenerator apiKeyGenerator = new ApiKeyGenerator() {
-        @Override
-        public String getKey(ApiInfoBO apiInfo) {
-            String uri = apiInfo.getUri();
-            Assert.notNull(uri, "http访问路径不能为空！！！");
-            StringBuilder builder = new StringBuilder(uri.split("\\?")[0]);
-
-            String method = apiInfo.getMethod();
-            if (method != null) {
-                builder.append("#").append(method.toUpperCase());
-            }
-            String version = apiInfo.getVersion();
-            if (version != null) {
-                builder.append("#").append(version);
-            }
-            return builder.toString();
-        }
-    };
 
     @Autowired
     private ApiFactory apiFactory;
@@ -75,7 +57,7 @@ public class ApiExecutor {
     }
 
     private Api getApi(ApiInfoBO apiInfoBO) {
-        String key = apiKeyGenerator.getKey(apiInfoBO);
+        String key = ApiKeyUtils.getKey(apiInfoBO);
         Api api = API_MAP.get(key);
         if (api != null) {
             return api;
@@ -101,9 +83,5 @@ public class ApiExecutor {
         Map<String, Object> getParams = FullHttpRequestHelper.getGetParamsFromUrl(request);
         String version = getParams.getOrDefault("version", 0).toString();
         return new ApiInfoBO(uri, name, version);
-    }
-
-    public interface ApiKeyGenerator {
-        String getKey(ApiInfoBO apiInfoBO);
     }
 }

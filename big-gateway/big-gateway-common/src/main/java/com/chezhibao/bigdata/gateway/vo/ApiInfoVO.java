@@ -1,19 +1,19 @@
-package com.chezhibao.bigdata.gateway.pojo;
+package com.chezhibao.bigdata.gateway.vo;
 
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author WangCongJun
  * Created by WangCongJun on 2019/2/20.
  */
 @Data
-public class ApiInfo {
+public class ApiInfoVO {
     /**
      * 唯一标识
      */
@@ -68,7 +68,7 @@ public class ApiInfo {
     /**
      * 具体API的详细信息（JSON）
      */
-    private String detail;
+    private Map<String,Object> detail;
     /**
      * api 状态 1. 正常 2、删除 0、无效
      */
