@@ -100,7 +100,7 @@ public class ApiManageServiceImpl implements ApiManageService {
             throw new BigException(500,e.getMessage());
         }
 
-        String key = ApiKeyUtils.getKey(apiInfo);
+        String key = ApiKeyUtils.getKey(apiById);
         redisTemplate.delete(key);
         return true;
     }

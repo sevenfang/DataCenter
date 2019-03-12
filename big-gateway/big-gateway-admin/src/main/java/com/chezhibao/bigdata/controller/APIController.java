@@ -57,9 +57,10 @@ public class APIController {
         apiManageService.updateApi(apiInfo);
         return BigdataResult.ok();
     }
-    @DeleteMapping("/api")
-    public Object deleteApi(@RequestBody ApiInfoVO apiInfoVO) {
-        ApiInfo apiInfo = ApiInfoDTO.trans2ApiInfo(apiInfoVO);
+    @DeleteMapping("/api/{id}")
+    public Object deleteApi(@PathVariable Integer id) {
+        ApiInfo apiInfo = new ApiInfo();
+        apiInfo.setId(id);
         apiManageService.delApi(apiInfo);
         return BigdataResult.ok();
     }
