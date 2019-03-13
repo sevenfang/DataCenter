@@ -109,4 +109,13 @@ http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.22/mysql-connecto
 	hadoop01:执行./cloudera-scm-server start
 	hadoop01,02,03执行：./cloudera-scm-agent start
 	```
+	当hadoop01存在7182和7180端口，且hadoop01,02,03均有连接到hadoop01的7182接口时，启动完成。
+	可通过下面方式验证：
+	```
+	hadoop01:执行./cloudera-scm-server status
+	hadoop01,02,03执行：./cloudera-scm-agent status
+	
+	访问 http://hadoop01:7180/ 正常则无误
+	```
+	如果有问题，则查看/opt/cloudera-manager/cm-5.13.1/log下的对应日志（包括cloudera-manager-server和cloudera-manager-agent）
 	
