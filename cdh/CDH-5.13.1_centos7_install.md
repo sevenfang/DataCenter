@@ -22,22 +22,22 @@ http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.22/mysql-connecto
 
 ## 三、机器环境配置
 1. 主机名
-	* 3台机器，修改/etc/sysconfig/network，设置主机名(hadoop01,hadoop02,hadoop03)
-	* hostname hadoop01 // hostname hadoop02 // hostname hadoop03
+	* 3台机器，修改/etc/sysconfig/network，设置主机名(CDH1,CDH2,CDH3)
+	* hostname CDH1 // hostname CDH2 // hostname CDH3
 2. hosts配置
 	* 3台机器修改hosts：
 		```
-		* 192.168.*.* hadoop01
-		* 192.168.*.* hadoop02
-		* 192.168.*.* hadoop03
+		* 192.168.*.* CDH1
+		* 192.168.*.* CDH2
+		* 192.168.*.* CDH3
 		```
 3. ssh免密登录
 	* 3台机器配置ssh免密登录
 		```
 		* ssh-keygen
-		* ssh-copy-id hadoop01
-		* ssh-copy-id hadoop02
-		* ssh-copy-id hadoop03
+		* ssh-copy-id CDH1
+		* ssh-copy-id CDH2
+		* ssh-copy-id CDH3
 		```
 4. jdk环境确认
 	* echo $JAVA_HOME 备用
@@ -78,15 +78,15 @@ http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.22/mysql-connecto
 3. 创建用户cloudera-scm
 	* 三台机器：useradd --system --no-create-home --shell=/bin/false --comment "Cloudera SCM User" cloudera-scm
 4. 配置CM Agent
-	* 三台机器: 修改文件/opt/cloudera-manager/cm-5.13.1/etc/cloudera-scm-agent/config.ini 中 server_host为主节点(server节点)的主机名（如hadoop01）。
+	* 三台机器: 修改文件/opt/cloudera-manager/cm-5.13.1/etc/cloudera-scm-agent/config.ini 中 server_host为主节点(server节点)的主机名（如CDH1）。
 5. 配置CM Server数据库(只在server节点)
 	```
 	mysql -u root -p
 	use mysql;
-	grant all on *.* to 'temp'@'hadoop01' identified by 'temp' with grant option;
+	grant all on *.* to 'temp'@'CDH1' identified by 'temp' with grant option;
 		
 	cd /opt/cloudera-manager/cm-5.13.1/share/cmf/schema/
-	./scm_prepare_database.sh mysql temp -h hadoop01 -utemp -ptemp --scm-host hadoop01 temp temp
+	./scm_prepare_database.sh mysql temp -h CDH1 -utemp -ptemp --scm-host CDH1 temp temp
 	```
 6. 创建Parcel目录
 	```
@@ -106,16 +106,27 @@ http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.22/mysql-connecto
 8. 启动cloudera-manager
 	```
 	cd /opt/cloudera-manager/cm-5.13.1/etc/init.d/
-	hadoop01:执行./cloudera-scm-server start
-	hadoop01,02,03执行：./cloudera-scm-agent start
+	CDH1:执行./cloudera-scm-server start
+	CDH1,2,3执行：./cloudera-scm-agent start
 	```
-	当hadoop01存在7182和7180端口，且hadoop01,02,03均有连接到hadoop01的7182接口时，启动完成。
+	当CDH1存在7182和7180端口，且CDH1,02,03均有连接到CDH1的7182接口时，启动完成。
 	可通过下面方式验证：
 	```
-	hadoop01:执行./cloudera-scm-server status
-	hadoop01,02,03执行：./cloudera-scm-agent status
+	CDH1:执行./cloudera-scm-server status
+	CDH1,2,3执行：./cloudera-scm-agent status
 	
-	访问 http://hadoop01:7180/ 正常则无误
+	访问 http://CDH1:7180/ 正常则无误
 	```
 	如果有问题，则查看/opt/cloudera-manager/cm-5.13.1/log下的对应日志（包括cloudera-manager-server和cloudera-manager-agent）
+## 五、界面操作
+![avatar](install_picture_1/1.png)
+![avatar](install_picture_1/2.png)
+![avatar](install_picture_1/3.png)
+![avatar](install_picture_1/4.png)
+![avatar](install_picture_1/5.jpg)
+![avatar](install_picture_1/6.jpg)
+![avatar](install_picture_1/7.jpg)
+![avatar](install_picture_1/8.jpg)
+![avatar](install_picture_1/9.jpg)
+![avatar](install_picture_1/10.png)
 	
