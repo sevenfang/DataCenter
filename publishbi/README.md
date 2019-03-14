@@ -19,7 +19,7 @@
 	并且需要保存svn update的用户密码。
 	
 	* mysql-版本任意
-	mysql初始化建表脚本[publish.sql](publish.sql)
+	mysql初始化建表脚本![publish.sql](publish.sql)
 	
 	* 机器，需要从部署机器往所有执行脚本机器的免密登录。
 ## 二、配置
