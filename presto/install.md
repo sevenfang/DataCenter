@@ -1,4 +1,4 @@
-# 2.1. Deploying Presto
+# Deploying Presto
 
 ## Installing Presto
 
