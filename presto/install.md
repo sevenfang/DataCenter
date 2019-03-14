@@ -2,7 +2,7 @@
 
 ## Installing Presto
 
-Download the Presto server tarball, presto-server-0.217.tar.gz, and unpack it. The tarball will contain a single top-level directory, presto-server-0.217, which we will call the installation directory.
+Download the Presto server tarball, ![presto-server-0.195.tar.gz](https://repo1.maven.org/maven2/com/facebook/presto/presto-server/0.195/presto-server-0.195.tar.gz), and unpack it. The tarball will contain a single top-level directory, presto-server-0.217, which we will call the installation directory.
 
 Presto needs a data directory for storing logs, etc. We recommend creating a data directory outside of the installation directory, which allows it to be easily preserved when upgrading Presto.
 
