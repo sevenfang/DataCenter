@@ -16,7 +16,6 @@
         <module>big-zipkin-dubbo-starter</module>
         <module>big-examples</module>
         <module>big-cache-starter</module>
-        <module>big-gateway</module>
     </modules>
     <packaging>pom</packaging>
 
