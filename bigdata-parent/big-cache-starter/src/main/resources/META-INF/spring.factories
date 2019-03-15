@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.chezhibao.bigdata.cache.config.CacheAutoConfiguration

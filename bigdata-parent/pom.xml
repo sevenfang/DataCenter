@@ -9,13 +9,11 @@
     <modules>
         <module>common</module>
         <module>sqltemplate</module>
-        <module>cache</module>
         <module>config-client</module>
         <module>big-auth</module>
         <module>sjb-framework-starter</module>
         <module>big-zipkin-dubbo-starter</module>
         <module>big-examples</module>
-        <module>big-cache-starter</module>
     </modules>
     <packaging>pom</packaging>
 

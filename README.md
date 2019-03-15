@@ -33,4 +33,4 @@ Todo:
 #### bigdata-interface（模块的对外服务接口）
 所有模块间的调用接口信息
 #### bigdata-parent（父工程）
-包含了所有基础框架
+包含了所有基础框架 [详情](bigdata-parent/README.md)
