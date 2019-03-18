@@ -35,18 +35,55 @@ Todo:
 #### bigdata-parent（父工程）
 包含了所有基础框架 [详情](bigdata-parent/README.md)
 ### 部署顺序
-#### 1、部署安装前置依赖服务
-##### zookeeper
-##### nacos
-##### sentinel
-##### cachecloud
+#### 一、部署安装前置依赖服务
+##### 1、安装部署zookeeper
+网上资料较多，不在赘述
+##### 2、安装部署nacos
+
+    1). 下载地址：https://github.com/alibaba/nacos/releases  
+    2). 解压 nacos-server-1.0.0-RC1.tar.gz
+        目录结构：   
+        |---nacos  
+        |------|---bin  
+        |------|---conf  
+        |------|---data  
+        |------|---plugins  
+        |------|---target  
+    3). 创建数据库：nacos-config，在将nacos/conf/nacos-mysql.sql sql中的表数据刷入nacos-config中
+    4). 修改nacos/conf/application.properties
+        在文件末尾添加以下类容
+        
+        db.num=1
+        db.url.0=jdbc:mysql://188.188.22.165:3306/nacos_config?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true
+        db.user=root
+        db.password=123
+    
+    注意：将数据库连接改一下
+    5). 启动nacos
+    进入nacos/bin目录，执行startup.sh 或startup.cmd
+    6). 打开web页面
+        地址： 127.0.0.1:8848/nacos   
+        用户名：nacos  密码： nacos
+        
+##### 3、安装部署sentinel
+>主要是安装一个控制台，实时接受服务传来的运行参数，以及实时更改或配置一些限流策略
+
+    1)、下载
+    https://github.com/alibaba/Sentinel/releases  
+    选择sentinel-dashboard-1.5.0.jar 下载
+    2)、安装部署
+    执行以下命令即可  
+    java -jar sentinel-dashboard-1.5.0.jar
+    3)、访问web页面 
+    默认端口是8080： 127.0.0.1:8080
+##### 4、安装部署cachecloud
 [部署文档](./cachecloud/README.md)
-#### 2、部署bigdata-parent
+#### 二、部署bigdata-parent
 因为此项目是其他项目的依赖，所以需要最先部署
 ```bash
 cd path/to/bigdata-parent
 mvn clean install
 ```
-#### 3、部署数据服务中心项目
+#### 三、部署数据服务中心项目
 
 
