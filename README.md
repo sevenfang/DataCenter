@@ -34,3 +34,14 @@ Todo:
 所有模块间的调用接口信息
 #### bigdata-parent（父工程）
 包含了所有基础框架 [详情](bigdata-parent/README.md)
+### 部署顺序
+#### 1、部署安装前置依赖服务
+#### 2、部署bigdata-parent
+因为此项目是其他项目的依赖，所以需要最先部署
+```bash
+cd path/to/bigdata-parent
+mvn clean install
+```
+#### 3、部署数据服务中心项目
+
+
