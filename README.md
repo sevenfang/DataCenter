@@ -36,6 +36,11 @@ Todo:
 包含了所有基础框架 [详情](bigdata-parent/README.md)
 ### 部署顺序
 #### 1、部署安装前置依赖服务
+##### zookeeper
+##### nacos
+##### sentinel
+##### cachecloud
+[部署文档](./cachecloud/README.md)
 #### 2、部署bigdata-parent
 因为此项目是其他项目的依赖，所以需要最先部署
 ```bash
