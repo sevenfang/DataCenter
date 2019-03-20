@@ -9,13 +9,13 @@
     <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}/bin</directory>
+            <directory>${project.basedir}/target/classes/bin</directory>
             <outputDirectory>/bin</outputDirectory>
             <directoryMode>0755</directoryMode> <!--目录执行权限-->
             <fileMode>0755</fileMode><!--文件执行权限-->
         </fileSet>
         <fileSet>
-            <directory>src/main/resources</directory>
+            <directory>${project.basedir}/src/main/resources</directory>
             <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
