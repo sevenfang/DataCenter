@@ -1,8 +1,8 @@
 #!/bin/bash
 # 指定执行的MainClass
-MAIN_CLASS=com.chezhibao.bigdata.dbms.server.DbmsServerApplication
-DEBUG_OPT=""
+JAVA_OPT=""
 ENV="prod"
+APPLICATION_VERSION=@project.version@
 while getopts ":m:d:c:j:h:e:" opt
 do
     case $opt in
@@ -14,7 +14,7 @@ do
         MAIN_CLASS=${OPTARG}
         ;;
         d)
-        DEBUG_OPT="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address="${OPTARG}
+        JAVA_OPT="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address="${OPTARG}
         ;;
         e)
         ENV=${OPTARG}
@@ -29,7 +29,6 @@ do
     esac
 done
 
-
 #获取执行文件所在目录
 BASH_PATH=$(cd `dirname $0`;pwd)
 # 进入此目录
@@ -42,5 +41,5 @@ if [ -z "${JAVA_HOME}" ];then
 fi
 cd ../
 echo `pwd`
-echo ${JAVA_HOME}/bin/java ${DEBUG_OPT} -Denv=${ENV} -classpath "./lib/*:." ${MAIN_CLASS}
-${JAVA_HOME}/bin/java ${DEBUG_OPT} -Denv=${ENV} -classpath "./lib/*:." ${MAIN_CLASS} >> /dev/null 2>&1 &
+echo ${JAVA_HOME}/bin/java ${JAVA_OPT} -Dproject.version=${APPLICATION_VERSION} -Denv=${ENV} -classpath "./lib/*:." ${MAIN_CLASS}
+${JAVA_HOME}/bin/java ${JAVA_OPT} -Dproject.version=${APPLICATION_VERSION} -Denv=${ENV} -classpath "./lib/*:." ${MAIN_CLASS} >> /dev/null 2>&1 &

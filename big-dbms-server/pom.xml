@@ -81,7 +81,7 @@
                     <!-- not append assembly id in release file name -->
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <descriptor>${basedir}/build/package.xml</descriptor>
+                        <descriptor>${basedir}/src/main/resources/build/package.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
